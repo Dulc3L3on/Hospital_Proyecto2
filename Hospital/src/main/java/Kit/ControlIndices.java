@@ -20,10 +20,10 @@ import javax.swing.JOptionPane;
  */
 public class ControlIndices {//Este será empleado por todas aquellas entidades que aparecen en el txt, puesto que su FK es # o tiene parte de él, y como no sabes como volver autoincrementable luego de eso y aunque supieras no para todas funciona [más que todo en el caso de las citas, puesto que son traspasadas xD a la tabla de las atendidas...
     String path ="noBorrar.txt";
-    int ultimosIndicesCreados[] = new int[8];//este se llenará con el contenido de los números que se encuentran en el archivo correspondiente... pero en el caso de la carga de datos, esto no será necesario, al menos al cargar luego de haberlo cargado sí será necesario... al igual que despueś de haber inicizdo secsión una determinada entidad
+    int ultimosIndicesCreados[] = {-1, -1, -1, -1, -1, -1, -1, -1};//este se llenará con el contenido de los números que se encuentran en el archivo correspondiente... pero en el caso de la carga de datos, esto no será necesario, al menos al cargar luego de haberlo cargado sí será necesario... al igual que despueś de haber inicizdo secsión una determinada entidad
     //0-> citaExamen, 1-> citaMedica, 2-> MEDICO, 3-> LABORATORISTA, 4-> PACIENTE, 5-> ADMINISTRADOR, 6-> Examen, 7-> Resultado
     
-    public void recuperarUltimosIndices(){
+    public void recuperarUltimosIndices(){//Esto s métodos sólo serán útiles para la primera CARGA DE DATOS, puesto que después de ella se procede a convertirlos en autoIncrementables...
         try(FileReader lector = new FileReader(new File("path"))){
             BufferedReader buffer = new BufferedReader(lector);
             
@@ -39,7 +39,7 @@ public class ControlIndices {//Este será empleado por todas aquellas entidades 
         }                
     }//y así 
     
-    public void registrarUltimosINdices(){
+    public void registrarUltimosIndices(){
         try(FileWriter escritor = new FileWriter(new File("noBorrar.txt"))){
             PrintWriter impresora = new PrintWriter(escritor);
             
@@ -53,10 +53,32 @@ public class ControlIndices {//Este será empleado por todas aquellas entidades 
         
     }//y así mando a guardar los últimos ínidces xD
     
+    /**
+     * Por medio de este método se devuelve el número de 
+     * indice que corresponde a la entidad en cuestión...
+     * @param tipoDeIndice
+     * @return
+     */
+    public int darIndiceCorrespondiente(int tipoDeIndice){
+        ultimosIndicesCreados[tipoDeIndice]+=1;
+        
+        return ultimosIndicesCreados[tipoDeIndice];        
+    }
+    
+    /**
+     * Empleado al inicio de una operación completa xD
+     * @param tipoUltimoIndice
+     * @param nuevoUltimo
+     */
     public void establecerUltimoIndice(int tipoUltimoIndice, int nuevoUltimo){
         ultimosIndicesCreados[tipoUltimoIndice]=nuevoUltimo;
     }
     
+    /**
+     *Al finalizar dicha operación...
+     * @param tipoUltimoIndice
+     * @return
+     */
     public int obtenerULtimoIndice(int tipoUltimoIndice){
         return ultimosIndicesCreados[tipoUltimoIndice];
     }

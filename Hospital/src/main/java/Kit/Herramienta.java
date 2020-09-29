@@ -21,14 +21,7 @@ public class Herramienta {//aquí iran las herramientas que no encajen con las c
         
         return contraseniaEncriptada;
         
-    }
-    
-    public void autogenerarID(String tipoEntidad){//este parámetro será útil para que puedas saber qué línea es la que te interesa extraer del documento de últimosINdices...
-        
-    }
-    
-    
-    
+    }     
     
     public java.sql.Date devolverSQLDate(long fecha){//es long porque al obtner la fecha actual se obtiene en iliseg los cuales son de tipo long [porque son muuuy largos]
         return new java.sql.Date (fecha);               

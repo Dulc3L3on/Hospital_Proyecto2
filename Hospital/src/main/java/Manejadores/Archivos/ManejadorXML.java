@@ -5,6 +5,7 @@
  */
 package Manejadores.Archivos;
 
+import Verificadores.VerificadorDB;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
@@ -22,14 +23,14 @@ import org.xml.sax.SAXException;
  * @author phily
  */
 public class ManejadorXML {
-    CargaDeDatos clasificador;
+    CargaDeDatos clasificador;    
     
     public ManejadorXML(Connection conexionDB){//recuerda que este solo deberá ser ejecutado cuando la DB esté vacía...
-        clasificador = new CargaDeDatos(conexionDB);
+        clasificador = new CargaDeDatos(conexionDB);        
     }
     
     
-    public void leerXML(String nombreArchivo){             
+    public void leerXML(boolean listadoALlenar[], String nombreArchivo){             
         
         try{
              DocumentBuilderFactory fabricaDocumento = DocumentBuilderFactory.newInstance();
@@ -38,7 +39,7 @@ public class ManejadorXML {
              
              documento.getDocumentElement().normalize();             
              
-             clasificador.clasificar(documento.getNodeName(), documento);
+             clasificador.clasificar(listadoALlenar, documento.getNodeName(), documento);
             
         }catch(ParserConfigurationException exc){
             JOptionPane.showMessageDialog(null, "No puedo transformarse el archivo", "error de conversion", JOptionPane.ERROR_MESSAGE);

@@ -1,0 +1,25 @@
+1
+
+
+
+
+
+
+
+
+
+
+
+--> aquí estará el ÚLTIMO CODIGO, el >, de la parte numérica
+
+[citaExamen] ... [recuerda que para la carga el ExAt tomará este valor como suyo, de ahí nunca más [a menos que haya otra carga de datos...] [va al principio, puesto que su val ini jamás será dado por el XML...
+[citaMedica]  ... [recuerda que la primera vez, es dado por el XML]
+[MEDICO]  ... [recuerda que la primera vez, es dado por el XML]
+[LABORATORISTA]  ...  [recuerda que la primera vez, es dado por el XML]
+[PACIENTE]  ... [recuerda que la primera vez, es dado por el XML]
+[ADMINISTRADOR]  ... [recuerda que la primera vez, es dado por el XML]
+[Examen] ... [recuerda que la primera vez, es dado por el XML]
+[Resultado]  ... [recuerda que la primera vez, es dado por el XML]
+ 					--para el caso de consulAt y exAt, su código es extraido es decir es dependiente de la tabla de su versión no atendida--
+								[los demás códigos serán agregados al cerrarse la sesión...]
+

@@ -23,7 +23,7 @@ public class ManejadorDB {
     private ResultSet resultadosConsulta;
     private ResultSetMetaData metadatosResultado;
     
-    private final String URL_BASEDEDATOS="jdbc:mysql://localhost:3306/INTELAF?useSSL=false";
+    private final String URL_BASEDEDATOS="jdbc:mysql://localhost:3306/HOSPITAL?useSSL=false";
     private final String NOMBRE_USUARIO="root";
     private final String CONTRASENIA="adminL3on@";//ahi lo revisas mañana xD   
     
@@ -32,9 +32,13 @@ public class ManejadorDB {
         try{
             conexion = DriverManager.getConnection(URL_BASEDEDATOS, NOMBRE_USUARIO, CONTRASENIA);                      
         }catch(SQLException sqlE){
-        
+            System.out.println("error al conectar con la DB: "+ sqlE.getMessage());
         }
         
+    }
+    
+    public void cerrarConexion(){
+    
     }
     
     public Connection darConexion(){
