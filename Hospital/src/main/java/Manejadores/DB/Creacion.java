@@ -28,7 +28,7 @@ public class Creacion {//harán lo mismo puesto que la clase que requiere de una
       
       public int crearDatosPersonales(boolean esCarga, String correo, String contrasenia, String telefono, String DPI){
         int idDelCreado=0;
-        String crear = "INSERT INTO Datos_Personales(?,?,?,?,?)";            
+        String crear = "INSERT INTO Datos_Personales(?,?,?,?)";            
         String contraseniaEncriptada=herramienta.encriptarContrasenia(contrasenia);//por el proceso de encriptacion y desencriptación, asumo que esta valor solo estará mientras se esté creando, puesto que después se procederá a "traducirse" lo que en la DB está...
                 
         try(PreparedStatement instruccion = conexion.prepareStatement(crear, Statement.RETURN_GENERATED_KEYS)){                       
@@ -77,15 +77,16 @@ public class Creacion {//harán lo mismo puesto que la clase que requiere de una
             
             instruccion.executeUpdate();
             
-        }catch(SQLException sqlE){
+        }catch(SQLException sqlE){            
+            System.out.println("error al crear espMed-> "+ sqlE.getMessage());
             return false;
-        }
+        }//ahí decides si con estos métodos harás la add al listado de errores...
         
         return true;
     }/*terminado*/
     
     public boolean crearHorarioLaboratorista(boolean esCarga, String codigoLaboratorista, String[] diasTrabajo){//puesto que así lo recibe la tabla,pero recuerda que cuando obtengas estos datos los converitrás al tipo que corresponden... boolean... creo xD
-        String crear ="INSERT INTO Horario_Laboratorista (?,?,?,?,?,?,?)";
+        String crear ="INSERT INTO Horario_Laboratorista (?,?,?,?,?,?,?,?)";
         
         try(PreparedStatement instruccion = conexion.prepareStatement(crear)){
             instruccion.setString(1, codigoLaboratorista);
@@ -100,13 +101,14 @@ public class Creacion {//harán lo mismo puesto que la clase que requiere de una
             instruccion.executeUpdate();
             
         }catch(SQLException sqlE){
+            System.out.println("error al crear el horario del laboratorista -> "+ sqlE.getMessage());
             return false;
         }//Creoq que esta esCarga me será útil para saber si mando a agregar al listado de errores o no... aunque talvez tenga que seguir empleando esa ventana, en lugar de un solo JOP...
         
         return true;
     }/*terminado*/
     
-     public void crearInforme(int codigoInforme, int codigoConsulta, String informe){//RECUERDA que sus datos en parte serán obtneridos de la consulta atendida más reciente [esto en la manera normal, lo cual lo lograrás saber porque corresponde a la recientemente atendida o registrada... la otra parte la obtendrá del método para los ID, puestp que es autoINcre "obligada xD" no lo sería si no hubieran problemas...
+     public boolean crearInforme(int codigoInforme, int codigoConsulta, String informe){//RECUERDA que sus datos en parte serán obtneridos de la consulta atendida más reciente [esto en la manera normal, lo cual lo lograrás saber porque corresponde a la recientemente atendida o registrada... la otra parte la obtendrá del método para los ID, puestp que es autoINcre "obligada xD" no lo sería si no hubieran problemas...
         String crear = "INSERT INTO Informe (?,?,?)";
         
         try(PreparedStatement instruccion = conexion.prepareStatement(crear)){
@@ -116,14 +118,17 @@ public class Creacion {//harán lo mismo puesto que la clase que requiere de una
             instruccion.setString(3, informe);
             
             instruccion.executeUpdate();
-            
+            return true;
         }catch(SQLException sqlE){
             //mandas a llamar al método para insertar en las excepciones para mandar a decir que algo salió mal al estar creando el informe, e indicas el código del informe...            
+            System.out.println("surgió un error al crear el informe -> "+sqlE.getMessage());
         }
+        
+        return false;
     }/*terminado*/
     
      public int crearOrden(String codigoMedico, String path){//aún no he leído bien, pero supondremos que se guarda el path... [pero si realmente llega a ser así, entonces con la forma normal tendría que haber una variación puestoq ue asignará el doc en sí ó nada más tomar el path u no el doc como tal de la selección mencionada...si tienes que agregar el arch entoces creo que tocará buscarlo en la carpeta dada...
-         String crear ="INSERT INTO Orden (codigoMedico, pathArchivo) VALUES (?,?)";//puesto que es autoincrementable...
+         String crear ="INSERT INTO Orden (codigoMedico, pathOrden) VALUES (?,?)";//puesto que es autoincrementable...
          int idDelCreado=0;
          
         if(path!=null){
@@ -134,8 +139,7 @@ public class Creacion {//harán lo mismo puesto que la clase que requiere de una
                  instruccion.executeUpdate();
                           
                  ResultSet resultado=instruccion.getGeneratedKeys();
-                 idDelCreado=resultado.getInt(1);             
-             
+                 idDelCreado=resultado.getInt(1);                        
             }catch(SQLException sqlE){
                 //agregas el error al listado...
                  return 0;

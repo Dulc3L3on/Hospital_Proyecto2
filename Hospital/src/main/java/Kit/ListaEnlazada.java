@@ -13,9 +13,10 @@ public class ListaEnlazada <E>{
     private Nodo<E> primerNodo;//posee el primero objeto puesto que así se sabe de donde partir
     private Nodo<E> ultimoNodo;//obtiene el último elemento, el cual de forma directa ayuda a saber si tiene o no elementos
     private String nombreLista;//podría tener nombre,, solo debes pensar como se lo asignarás
-    private int tamanioLista;
+    private int tamanioLista=0;
     private int tamanioFinal;//Esta var será útil para las propiedades, pues esta contiene el número de elementos totales que contiene un grupo, en este caso almacenado en una lista
-    //private Casilla casillaAnadida;
+    
+    private int numeroNodoCoincidente=0;    
     
     public ListaEnlazada(){
         crearListar();
@@ -76,6 +77,33 @@ public class ListaEnlazada <E>{
                 tamanioLista--;
            }            
      }
+      
+    /**
+     * Devulelve el nodo en el que se encontró la coincidencia
+     * establece una var que puede ser recuperada para que pueda
+     * conocer el número de nodo en el que se halló dicha coincidencia
+     * devulve -1 y el último nodo si no halló coincidencias...
+     * @param listaDeBusqueda
+     * @param contenidoABuscar
+     */
+    public Nodo<E> darNodoCoincidente(ListaEnlazada<E> listaDeBusqueda, E contenidoABuscar){
+        Nodo<E> nodoAuxiliar = listaDeBusqueda.primerNodo;
+        numeroNodoCoincidente=0;//Aspi cuando quiera emplear el método otra vez, todo estará en la normalidad
+        
+        for (int numeroNodo = 1; numeroNodo <= listaDeBusqueda.darTamanio(); numeroNodo++) {
+            if(nodoAuxiliar.contenido.equals(contenidoABuscar)){
+                numeroNodoCoincidente=numeroNodo;
+                break;
+            }            
+            nodoAuxiliar=nodoAuxiliar.nodoSiguiente;
+        }
+        
+        return nodoAuxiliar;
+      }
+    
+    public int darNumeroNodoCoincidente(){                
+        return numeroNodoCoincidente;
+    }
       
     /**
      * Añade un nuevo siguiente al nodo de la lista qué invocó

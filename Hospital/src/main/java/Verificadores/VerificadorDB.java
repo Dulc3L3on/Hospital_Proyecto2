@@ -5,6 +5,9 @@
  */
 package Verificadores;
 
+import Entidades.Usuario;
+import Manejadores.DB.Registro;
+import Manejadores.DB.Sesion;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,11 +19,18 @@ import java.sql.Statement;
  */
 public class VerificadorDB {
     private Connection conexion;
+    Registro registrador;
+    Sesion sesion;
+    Usuario usuario;//esto es para el logueo... que devolverán los métodos que provienen de la clase con el mismo nombre... y que mandarás a la página que corresponde... a la cual te dirigiras según el tipo de usuario por medio del método para redirigir introducido en el response...
+    
     private boolean debeLlenarse=false;
     boolean estaLlena[];
     
+    
     public VerificadorDB(Connection conexionDB){
         conexion = conexionDB;
+        registrador = new Registro(conexion);
+        sesion = new Sesion(conexion);
     }
     
     private void verificarLlenura(){//todavía no he decidido si llegase a pasar que no se llenan todas sino solo algunas, le voy a dejar que lo ingrese manualmente o le seguiré pidiendo que la llene... si se lo voy a permitir entonces tendría que hacer FALSE La var que indicasi debe llenarse...
@@ -55,8 +65,12 @@ public class VerificadorDB {
         }
         
         return numeroFilas ==0;    
-    }
+    }   
     
+    /**
+     * Este método es el empleado para saber si es necesario llamar al manejadorXML en la pág CargaDeDatos...
+     * @return
+     */
     public boolean debeLlenarse(){
         verificarLlenura();
         return debeLlenarse;
@@ -65,6 +79,36 @@ public class VerificadorDB {
     public boolean[] darListadoVacios(){
         return estaLlena;
     }
+    
+    /*aquí hacia abajito los métodos para verificar lo del logueo y lo del registro :3*/
+    public Usuario verificarLogueo(String tipoUsuario, String[] datosLogueo){//el tipo de usario será obtenido según la selección del cbBox...        
+//        
+//      if(tipoUsuario.equals("Paciente")){
+//          //aquí y en cada uno de los casos, almacenarías el usuario en su form amás general, de tal manera que si es null puedas saber que devolver...
+//      }
+//      if(tipoUsuario.equals("Medico")){
+//      }
+//      if(tipoUsuario.equals("Laboratorista")){
+//      }
+//        mientras, en lo que reviso lo de la carga...
+        
+    return null;
+    }
+    
+    public boolean verificarRegistro(String tipoUsuario, String[] datosRegistro) {       
+        if(tipoUsuario.equals("Paciente")){
+            return registrador.registrarPaciente(datosRegistro);//con tal de no atiborrar al método de registro con el switch, mejor que converga aquí xD
+        }if(tipoUsuario.equals("Medico")){
+            return registrador.registrarMedico();
+        }if(tipoUsuario.equals("Laboratorista")){
+            return registrador.registrarLaboratorista(datosRegistro);
+        }
+        
+        return registrador.registrarAdministrador();                        
+    }//Recuerda que aún andas pensando si pueden ser 1 método junto con el de carga... [de todos modos, no se entera de donde recibe su información, el sólo sabe que la tiene o no...
+    
+    
+  
     
 }
 /*

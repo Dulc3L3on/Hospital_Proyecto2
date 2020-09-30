@@ -56,12 +56,13 @@ public class CreadorDeCarga {//si hay algo que pueda generalizar, será colocado
             //mandarás a llamar al objeto que se encarga de concatenar el tipo de categoría y código del que surgió el error            
             
             //aquí va el if para que se exe solo cuando se esté creando de a 1... al menos en una sesión...
+            System.out.println("erro al cargar Admin -> " + sqlE.getMessage());
             JOptionPane.showMessageDialog(null, "Surgió un error al registrar\nal nuevo administrador", "error de creacion", JOptionPane.ERROR_MESSAGE);
         }                               
     }/*terminado*///al menos lo que te solicitaron...
     
     public void crearPaciente(String codigo, String nombre, String sexo, String birth, String DPI, String telefono, String peso, String tipoSangre, String correo, String contrasenia){//acordemos que las contras van al final de los paráms de creación...
-        String crear ="INSERT INTO Paciente (?,?,?,?,?)";
+        String crear ="INSERT INTO Paciente (?,?,?,?,?,?,?)";
         
         int codigoDatosPersonales= creacion.crearDatosPersonales(true, correo, contrasenia, telefono, DPI);
         
@@ -98,8 +99,7 @@ public class CreadorDeCarga {//si hay algo que pueda generalizar, será colocado
             String[] titulos, String correo, int horaInicio, int horaFin, String fechaIncorporacion, String contrasenia){//deoendiendo al final de como se pueda obtner a los títulos, o seguirá teniendo en los paráms a un arreglo o al mapeo, para convertirlo a string...
         
         String crear ="INSERT INTO Medico (?,?,?,?,?,?,?)";        
-        int codigoDatosPersonales= creacion.crearDatosPersonales(true, correo, contrasenia, telefono, DPI);//puesto que esta entidad [médico] requiere de este código
-        ListaEnlazada<Integer> codigosEspecialidades;
+        int codigoDatosPersonales= creacion.crearDatosPersonales(true, correo, contrasenia, telefono, DPI);//puesto que esta entidad [médico] requiere de este código        
         
         if(codigoDatosPersonales>0){//Puesto que Médico SÍ DEPENDE de este valor para crear correctamente su registro, por lo ual si falla, NO DEBERÁ  de registrarse al médico al menos no automáticamenente, sino manual, esto por medio de la creación que puede hacer el administrador...
             try(PreparedStatement instruccion = conexion.prepareStatement(crear)){
@@ -149,30 +149,24 @@ public class CreadorDeCarga {//si hay algo que pueda generalizar, será colocado
      * @param titulo
      */
     private int agregarEspecialidad(String titulo){//a especialidad :v y al médico xD        
-        if(!listaEspecialidades.estaVacia()){
-            Nodo<String> nodoAuxiliar = listaEspecialidades.obtnerPrimerNodo();
-            
-            for (int especialidadActual = 1; especialidadActual <= listaEspecialidades.darTamanio(); especialidadActual++) {//recuerda con listasEnlazadas el conteo empieza en 1!!!
-                if(titulo.equalsIgnoreCase(nodoAuxiliar.contenido)){
-                    return especialidadActual;                    
-                    
-                }else if(especialidadActual== listaEspecialidades.darTamanio()){
-                    if(creacion.crearEspecialidad(true, titulo)){
-                        listaEspecialidades.agregarNuevoSiguiente(nodoAuxiliar, titulo);                    
-                        nodoAuxiliar.establecerAtributoExtra("0");//esto me hace pensar que talvez si sería útil agregar una clase para Especialidad u otra, pero qu debería addse 1... pero es que después no se usará tanto, y eso no me parece...
-                    }else{
-                        return 0;//ya sabes cuando recibas este valor, no salió bien la creación xD
-                    }                    
-                }
-                
-                nodoAuxiliar=nodoAuxiliar.nodoSiguiente;
-            }//fin del for con el cual se recorre el listado de especialidades...                       
-        }else{
-            listaEspecialidades.anadirAlFinal(titulo);//Esto pasará una uniquísima vez... xD
-            listaEspecialidades.obtnerPrimerNodo().establecerAtributoExtra("0");
+        Nodo nodoCOincidente = listaEspecialidades.darNodoCoincidente(listaEspecialidades, titulo);
+        
+        if(listaEspecialidades.darNumeroNodoCoincidente()==0){//si, pues no existe...
+            if(creacion.crearEspecialidad(true, titulo)){
+                if(listaEspecialidades.estaVacia()){
+                    listaEspecialidades.anadirAlFinal(titulo);
+                }else{
+                    listaEspecialidades.agregarNuevoSiguiente(nodoCOincidente, titulo);                                        
+                }                                                  
+                nodoCOincidente.establecerAtributoExtra("0");//esto me hace pensar que talvez si sería útil agregar una clase para Especialidad u otra, pero qu debería addse 1... pero es que después no se usará tanto, y eso no me parece...
+                return listaEspecialidades.darTamanio();
+                //aL FINAL de cuentas ya no incluí esta revisión en las consultas, puesto que si no existe en la DB 
+            }else{
+               return 0;
+            }
         }
         
-        return listaEspecialidades.darTamanio();
+        return listaEspecialidades.darNumeroNodoCoincidente();        
     }/*terminado*/
   
     public void crearExamen(String codigo, String nombre, String requiereOrden, String descripcion, String costo, String tipoExtensionResultado){//quedemos de acuerdo con que los parseos se harán aquí para que de esa manera no surga un error en el exterior y dichos parseos no serán agregados de manera directa al campo, para evitar que se deje a medias el trabajo...
@@ -181,19 +175,19 @@ public class CreadorDeCarga {//si hay algo que pueda generalizar, será colocado
         try(PreparedStatement instruccion = conexion.prepareStatement(crear)){
             int codigoExamen = Integer.parseInt(codigo);            
             
-            instruccion.setInt(codigoExamen, codigoExamen);
-            instruccion.setString(codigoExamen, nombre);
-            instruccion.setString(codigoExamen, requiereOrden);
-            instruccion.setNString(codigoExamen, descripcion);//supongo que esto será útil para un tinyChar...
-            instruccion.setString(codigoExamen, costo);
-            instruccion.setString(codigoExamen, tipoExtensionResultado);       
+            instruccion.setInt(1, codigoExamen);
+            instruccion.setString(2, nombre);
+            instruccion.setString(3, requiereOrden);
+            instruccion.setNString(4, descripcion);//supongo que esto será útil para un tinyChar...
+            instruccion.setString(5, costo);
+            instruccion.setString(6, tipoExtensionResultado);       
             
             instruccion.executeUpdate();
             controladorIndices.establecerUltimoIndice(6, codigoExamen);
             
-        }catch(ClassCastException | SQLException e){
+        }catch(Exception e){
             //mandas a llamar al método para agregar a la lista de errores...
-            System.out.println(e.getMessage());
+            System.out.println("error al crear examen"+ e.getMessage());
         }        
     }/*terminado*/
     
@@ -212,8 +206,8 @@ public class CreadorDeCarga {//si hay algo que pueda generalizar, será colocado
                 instruccion.setString(2, nombre);
                 instruccion.setString(3, registroMS);                        
                 instruccion.setInt(4, codigoExamen);
-                instruccion.setInt(5, codigoDatosPersonales);
-                instruccion.setDate(6, fechaInicio);                                
+                instruccion.setDate(5, fechaInicio);                                
+                instruccion.setInt(6, codigoDatosPersonales);                
             
                 instruccion.executeUpdate();
                 
@@ -222,7 +216,7 @@ public class CreadorDeCarga {//si hay algo que pueda generalizar, será colocado
                 }
             }catch(NumberFormatException | NullPointerException | ClassCastException | SQLException e){ //me están dando ganas de colocar exception, puesto que no especificaré el tipo de error, o sí???
                 //mandas a llamar al método para agregar al listado de errores, en este caso sería porque no pudo crearse al labo...
-                System.out.println(e.getMessage());//creo que esto...nop, el usario no lo entendería mucho, o sí? o con esto estaría delantando el proceso :O  eso si no xD
+                System.out.println("error al cargar el laboratorista -> "+ e.getMessage());//creo que esto...nop, el usario no lo entendería mucho, o sí? o con esto estaría delantando el proceso :O  eso si no xD
             }
         }else{
             //mandas a llamar al método para agregar al listado de errores, en este caso sería porque no pudo crearse al labo...
@@ -232,7 +226,7 @@ public class CreadorDeCarga {//si hay algo que pueda generalizar, será colocado
     public void crearConsultaAtendida(String codigoPaciente, String codigoMedico,  String fecha, String hora, String codigoInforme, String informe){
     //Su codigo lo obtnedrá del método para los ID... por el momento tengo pensado que se haga desde 
     //la carga de datos, para que se mande de una vez el argu aquí como int, pero la cuestión es... y si falla el proceso... por ello debería revisarlo para saber si debo hacer o no la consulta y para ello mejor lo hago desde aquí...
-        String crear ="INSERT INTO Consulta_Atendida (?,?,?,?,?,?)";
+        String crear ="INSERT INTO Consulta_Atendida (codigo, codigoPaciente, codigoMedico, fecha, hora) VALUES (?,?,?,?,?)";
         
         try(PreparedStatement instruccion = conexion.prepareStatement(crear)){            
             int paciente = Integer.parseInt(codigoPaciente);
@@ -245,17 +239,17 @@ public class CreadorDeCarga {//si hay algo que pueda generalizar, será colocado
             instruccion.setInt(1, codigoConsultaAtendida);
             instruccion.setInt(2, paciente);
             instruccion.setString(3, codigoMedico);            
-            instruccion.setDate(4, fechaInicio);
-            instruccion.setInt(5, horaRealizacion);  
+            instruccion.setDate(5, fechaInicio);//PUESTO QUE tipo de consultas en la carga, es null
+            instruccion.setInt(6, horaRealizacion);  
             
             instruccion.executeUpdate();
-            controladorIndices.establecerUltimoIndice(1, codigoConsultaAtendida);
             
-            creacion.crearInforme(codigoDeInforme, codigoConsultaAtendida, informe);//lo coloco aquí por el hecho de que podría generarse una excepción al hacer al converesión del código de informe
-            
+            if(creacion.crearInforme(codigoDeInforme, codigoConsultaAtendida, informe)){//lo coloco aquí por el hecho de que podría generarse una excepción al hacer al converesión del código de informe)
+                controladorIndices.establecerUltimoIndice(8, codigoDeInforme);
+            }                        
         }catch(NumberFormatException | NullPointerException | ClassCastException | SQLException e){        
             //Agregas a la lista de excepciones...
-            System.out.println(e.getMessage());
+            System.out.println("error al cargar la consulAt ->"+e.getMessage());
         }                        
     }/*terminado*/
     
@@ -266,18 +260,14 @@ public class CreadorDeCarga {//si hay algo que pueda generalizar, será colocado
         int codigoExamenAtendido = controladorIndices.darIndiceCorrespondiente(0);//aquí se manda a llamar al método para obtner el índice corresp, sip , deberá ser llamado aquí              
                                        
         if(crearExamenAtendido(codigoExamenAtendido, codigoLaboratorista, codigoExamen, codigoPaciente, fechaRealizacion, horaRealizacion)){//puede fallar ya sea por casteo [debido al codigoExamen o porque surgió algo en su interior...
-            int numeroOrden= creacion.crearOrden(pathOrden, pathOrden);                
+            int numeroOrden= creacion.crearOrden(null, pathOrden);//ya que no te lo dan y como de todos modos aunque hicieras otro método, al final de cuentas tendrías la col en null... a menos que colocaras algo como "si registros" apra hacer ref a que no se indicó el médico en la carga...
             
             if(numeroOrden!=0){
                 crearResultadoConOrden(codigoResultado, codigoExamenAtendido, pathResultado, numeroOrden);//falta lo de los paths, puesto que no has leido
             }else if(pathOrden==null){
                crearResultadoSinOrden(codigoResultado, codigoExamenAtendido, pathResultado);
             }                           
-        }else{
-            //se manda a agegar al lisado de errores
-        }
-        
-        
+        }//no debes add a la lista, pueto que el método de exAt, ya lo hace...           
     }//aquí en este método se mandará a llamar al que se encarga de darle el id a exAt... dew esta manera se podrá detectar el error si es que hubiera uno...
     
     public boolean crearExamenAtendido(int codigoExamenAtendido, String codigoLaboratorista, String codigoExamen, String codigoPaciente, String fechaDeRealizacion, String hora){
@@ -300,22 +290,20 @@ public class CreadorDeCarga {//si hay algo que pueda generalizar, será colocado
             instruccion.setDate(5, fechaRealizacion);
             instruccion.setInt(6, horaRealizacion);
             
-            instruccion.executeUpdate();
-            controladorIndices.establecerUltimoIndice(0, codigoExamenAtendido);//pues media vez se creó sin importar que suceda con lo demás, debe ser registrado... sino tronmitos xD
+            instruccion.executeUpdate();//recuerad que estos métodos que no se volverán autoincre, no deben establecer a cada ratos el ínidce para reemplazar si es que ahora tiene un valor > o dejar el que tenía en caso contrario... esto lo digo por el hecho de que estos comienzan a aprtir de 1 y siempre incre de 1 en 1, así no es nec...            
             
         }catch(NumberFormatException | NullPointerException | ClassCastException | SQLException e){
             //Agregas a la lista de excepciones... [donde sería bueno especificaras el tipo...]
-            System.out.println(e.getMessage());
-            
+            System.out.println("error al cargar el exAt ->"+e.getMessage());            
             return false;
         }      
         
         return true;
     }/*terminado*/
       
-    
+ //NO OLVIDES QUE Cuando el resultado no requiera orden NO PUEDES mandarle un valor 0, puesto que hace referencia a una tabla  no es cualquier atributo... de lo contrario sí se podría tener 1 solo método...
       public void crearResultadoConOrden(String codigoResultado, int codigoExamenAtendido, String path, int numeroOrden){//falta el path... y al mandarle el código del examen, se permite que puedan corregirse los errores manualmente, si es que este no va a ser generado por ti misma...
-         String crear="INSERT INTO Resultado (codigo, codigoExamenAtendido, pathResultado, numeroOrden) VALUES (?,?,?,?)";//te recuerda que lo del path está aśi, puesto que guardarás la dirección, entonces es indiferente...         
+         String crear="INSERT INTO Resultado VALUES (?,?,?,?)";//te recuerda que lo del path está aśi, puesto que guardarás la dirección, entonces es indiferente...         
          
          try(PreparedStatement instruccion = conexion.prepareStatement(crear)){    
              int codigo = Integer.parseInt(codigoResultado);
@@ -326,30 +314,31 @@ public class CreadorDeCarga {//si hay algo que pueda generalizar, será colocado
              instruccion.setInt(4, numeroOrden);
              
              instruccion.executeUpdate();
-             
+             controladorIndices.establecerUltimoIndice(7, codigo);             
          }catch(SQLException sqlE){
              //Mandas a llamar al método para añadir el error...
          }                           
      }
      
      public void crearResultadoSinOrden(String codigoResultado,int codigoExamenAtendido, String path){//Esto s 2 si solo son para creación...
-         String crear ="INSERT INTO Resultado (codigo,codigoExamenAtendido, pathResultado) VALUES (?)";
+         String crear ="INSERT INTO Resultado (codigo,codigoExamenAtendido,pathResultado) VALUES (?,?,?)";
          
          try(PreparedStatement instruccion = conexion.prepareStatement(crear)){
              int codigo = Integer.parseInt(codigoResultado);
              
              instruccion.setInt(1, codigo);  
-              instruccion.setInt(2, codigoExamenAtendido);
+             instruccion.setInt(2, codigoExamenAtendido);
              instruccion.setString(3, path);             
              
              instruccion.executeUpdate();
+             controladorIndices.establecerUltimoIndice(7, codigo);//puesto que después se volverá autoincre, la tabla completa...
          }catch(SQLException sqlE){
              //Mandas a llamar al método para añadir el error...
          }
      }
     
     public void crearCita(String codigoCita, String codigoPaciente, String codigoMedico, String tipoConsulta, String fecha, String hora){
-        String crear ="INSERT INTO Cita_Medica (numeroCita, codigoPaciente, codigoMedico, tipoConsulta, fecha, hora)";
+        String crear ="INSERT INTO Cita_Medica VALUES (?,?,?,?,?,?)";
         
         try(PreparedStatement instruccion = conexion.prepareStatement(crear)){
             int numeroCita = Integer.parseInt(codigoCita);
@@ -365,21 +354,28 @@ public class CreadorDeCarga {//si hay algo que pueda generalizar, será colocado
             instruccion.setInt(7, horaRealizacion);
             
             instruccion.executeUpdate();
-            controladorIndices.establecerUltimoIndice(6, numeroCita);
-            
+            controladorIndices.establecerUltimoIndice(1, numeroCita);//Esto es para que se pueda trabajar de forma correcta con el ID para la citaAtendida...            
         }catch(SQLException sqlE){
             //se manda a llmar al método para que sea agregada la excepcion al listado...
-        }
-        
+            System.out.println("error al cargar la cita -> "+ sqlE.getMessage());
+        }        
     } 
-    
+
     public void crearConsulta(String tipo, String costo){
-        creacion.crearConsulta(tipo, costo);
+        listaEspecialidades.darNodoCoincidente(listaEspecialidades, tipo);
+        
+        if(listaEspecialidades.darNumeroNodoCoincidente()!=0){
+            creacion.crearConsulta(tipo, costo);
+        }else{
+            //se agrega a la lista de errores, puesto que esa especialidad no existe en la tabla correspondiente
+        }               
     }
      
     public void establecerControladorIndices(ControlIndices controlador){
         controladorIndices = controlador;
     }
+    
+    //recuerda que con respecto a los índices, los que tienen cols que dependen de los índices ant estableceidos por el método que crea la tabla que le precede, obtienen y registran en la var... y todos al finalizar su proceso, registran en el arch...
     
      /*
     Lo bueno es que estas clases CRUD, no requieren ser la misma instancia en las demás clases,puesto 

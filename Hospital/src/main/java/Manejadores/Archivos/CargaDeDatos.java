@@ -32,25 +32,26 @@ public class CargaDeDatos {
     /**
      *Método llamado en al iniciar la aplicación, siempre y cuando
      * la DB aún esté vacía...
+     * @param tiposACargar
      * @param categoria
      * @param documento
      */
     public void clasificar(boolean[] tiposACargar, String categoria, Document documento){//el XML está formado por raiz [hospital], categorias [admin, labo, pac...] y atribitos                          
        leerAdministrador(tiposACargar[0], documento.getElementsByTagName("admin"));//con esto se obtiene a todos los nodos que correspondan a la categoría "admin" en este caso...                                 
-       leerPaciente(documento.getElementsByTagName("paciente"));//de esta manera no importará en qué orden puedan venir, puesto que YO soy quien los llama según el orden que requiero...                               
-       leerMedico(documento);
-       leerExamen(documento.getElementsByTagName("examen"));    
-       leerLaboratorista(documento);                           
-       leerCita(documento.getElementsByTagName("cita"));//tiene que ir aquí arriba puesto que a partir del código de esta se genrearán los de las consultas atendidas...
-       leerInforme(documento.getElementsByTagName("reporte"));//informe médico  [aquí se encuentra la creación de consultaAt]        
-       leerResultado(documento.getElementsByTagName("resultado"));//[aquí se encuentra la creación de exAt]
-       leerConsulta(documento.getElementsByTagName("consulta"));
+       leerPaciente(tiposACargar[1], documento.getElementsByTagName("paciente"));//de esta manera no importará en qué orden puedan venir, puesto que YO soy quien los llama según el orden que requiero...                               
+       leerMedico(tiposACargar[2], documento);
+       leerExamen(tiposACargar[3], documento.getElementsByTagName("examen"));    
+       leerLaboratorista(tiposACargar[4],documento);                           
+       leerCita(tiposACargar[5], documento.getElementsByTagName("cita"));//tiene que ir aquí arriba puesto que a partir del código de esta se genrearán los de las consultas atendidas...
+       leerInforme(tiposACargar[6], documento.getElementsByTagName("reporte"));//informe médico  [aquí se encuentra la creación de consultaAt]        
+       leerResultado(tiposACargar[7], documento.getElementsByTagName("resultado"));//[aquí se encuentra la creación de exAt]
+       leerConsulta(tiposACargar[8], documento.getElementsByTagName("consulta"));
        controladorIndices.registrarUltimosIndices();
     }
     
     //toma en cuenta que cada uno de estos métodos emplearán la misma técnica para leer cada una de las etiquetas, pero por la manera de guardarlas en la DB, habrán varias composiciones xD
-    private void leerAdministrador(boolean cargar, NodeList Administradores){//lo cual viene a ser los nodos, p.ej -> doctor, examen....        
-        if(cargar && Administradores!=null){
+    private void leerAdministrador(boolean debeCargar, NodeList Administradores){//lo cual viene a ser los nodos, p.ej -> doctor, examen....        
+        if(debeCargar && Administradores!=null){
             for(int administradorAcual=0; administradorAcual < Administradores.getLength(); administradorAcual++ ){//es decir el numero de ocurrencia del mismo tipo de categoría...
                 Node administrador = Administradores.item(administradorAcual);//que aquí lo nombraron como item xD
             
@@ -65,8 +66,8 @@ public class CargaDeDatos {
     }//Y ASÍ XD, ESTE ES EL PROCESO GENERAL QUE DEBERÁS SEGUIR, A LO CUAL LE AGREGARÁS LAS PERSONALIZACIONES, ES DECIR cuando requiere una op extra, pues requiere crear otra tabla, o porque el atributo en la DB es de diferente tipo... pero lo que tienes ahorita, es lo general xD  
     /*terminado*/
     
-    private void leerPaciente(NodeList pacientes){
-        if(pacientes!=null){                       
+    private void leerPaciente(boolean debeCargar, NodeList pacientes){
+        if(debeCargar && pacientes!=null){                       
             for(int pacienteActual=0; pacienteActual < pacientes.getLength(); pacienteActual++ ){//es decir el numero de ocurrencia del mismo tipo de categoría...
                 Node paciente = pacientes.item(pacienteActual);//que aquí lo nombraron como item xD
             
@@ -81,8 +82,8 @@ public class CargaDeDatos {
         }
     }/*terminado*/
     
-     public void leerMedico(Document xml){        
-        if(xml!=null){
+     public void leerMedico(boolean debeCargar, Document xml){        
+        if(debeCargar && xml!=null){
             String titulos[];
             NodeList listaMedicos = xml.getElementsByTagName("doctor");//que aquí lo nombraron como item xD
                 
@@ -96,7 +97,7 @@ public class CargaDeDatos {
                 for (int tituloActual = 0; tituloActual < especialidades.getLength(); tituloActual++) {
                     Node especialidad = especialidades.item(tituloActual);//me ubico en una etiqueta título en particular...                                      
                         
-                        titulos[tituloActual] = especialidad.getNodeValue();//obtengo el nombre del título [p.ej pediatría]
+                        titulos[tituloActual] = especialidad.getNodeValue().toLowerCase();//obtengo el nombre del título [p.ej pediatría] y lo establezco en minus para evitar desacuerdos al revisar para las consultas...
                 }//fin del for por medio del cual obtengo el listado de títulos del médico en cuestión...                      
                 
                 if(medico.getNodeType()== Node.ELEMENT_NODE){//aquí reviso si es un elemnto que por lo tanto contiene atributos [es decir si p.ej es un admin con su DPI, nombre, contra y codigo...
@@ -104,15 +105,15 @@ public class CargaDeDatos {
                     
                    creadorRegistros.crearMedico(elemento.getAttribute("CODIGO"), elemento.getAttribute("NOMBRE"), 
                    elemento.getAttribute("COLEGIADO"), elemento.getAttribute("DPI"), elemento.getAttribute("TELEFONO"),titulos,
-                   elemento.getAttribute("CORREO"), Integer.parseInt(horas.item(0).getNodeValue()), Integer.parseInt(horas.item(0).getNodeValue()),//recuerda que debes averiguar como es que se obtienen los datos de las etiquetas anidadas...
+                   elemento.getAttribute("CORREO"), Integer.parseInt(horas.item(0).getNodeValue()), Integer.parseInt(horas.item(1).getNodeValue()),//recuerda que debes averiguar como es que se obtienen los datos de las etiquetas anidadas...
                    elemento.getAttribute("TRABAJO"), elemento.getAttribute("PASSWORD"));
                }
             }//fin del for exterior                                                                         
         }//fin del if que evita excepciones por no existir la categoría en el archivo dado...                                                   
     }/*terminado*/
     
-    private void leerExamen(NodeList examenes){
-        if(examenes!=null){
+    private void leerExamen(boolean debeCargar, NodeList examenes){
+        if(debeCargar && examenes!=null){
             for(int examenActual=0; examenActual < examenes.getLength(); examenActual++ ){//es decir el numero de ocurrencia del mismo tipo de categoría...
                 Node examen = examenes.item(examenActual);//que aquí lo nombraron como item xD
             
@@ -126,8 +127,8 @@ public class CargaDeDatos {
         }                
     }/*terminado*/
          
-    private void leerLaboratorista(Document xml){
-         if(xml!=null){
+    private void leerLaboratorista(boolean debeCargar, Document xml){
+         if(debeCargar && xml!=null){
             String dias[];
             NodeList listaLaboratoristas = xml.getElementsByTagName("laboratorista");//que aquí lo nombraron como item xD
                 
@@ -153,9 +154,24 @@ public class CargaDeDatos {
             }//fin del for exterior                                                                         
         }//fin del if que evita excepciones por no existir la categoría en el archivo dado...             
     }/*terminado*/   
+    
+     private void leerCita(boolean debeCargar, NodeList citas){
+        if(debeCargar && citas!=null){
+            for(int citaActual=0; citaActual < citas.getLength(); citaActual++ ){//es decir el numero de ocurrencia del mismo tipo de categoría...
+                Node cita = citas.item(citaActual);//que aquí lo nombraron como item xD
+            
+                if(cita.getNodeType()== Node.ELEMENT_NODE){//aquí reviso si es un elemnto que por lo tanto contiene atributos [es decir si p.ej es un admin con su DPI, nombre, contra y codigo...
+                    Element elemento = (Element) cita;                
+                
+                    creadorRegistros.crearCita(elemento.getAttribute("CODIGO"), elemento.getAttribute("PACIENTE"), elemento.getAttribute("MEDICO"), elemento.getAttribute("ESPECIALIDAD"),
+                    elemento.getAttribute("FECHA"), elemento.getAttribute("HORA"));
+                }                        
+            }                
+        }                    
+    }
          
-    private void leerInforme(NodeList informes){
-        if(informes!=null){                       
+    private void leerInforme(boolean debeCargar, NodeList informes){
+        if(debeCargar && informes!=null){                       
             
             for(int informeActual=0; informeActual < informes.getLength(); informeActual++ ){//es decir el numero de ocurrencia del mismo tipo de categoría...
                 Node informe = informes.item(informeActual);//que aquí lo nombraron como item xD
@@ -170,8 +186,8 @@ public class CargaDeDatos {
         }                   
     }
     
-    private void leerResultado(NodeList resultados){
-        if(resultados!=null){                                   
+    private void leerResultado(boolean debeCargar, NodeList resultados){
+        if(debeCargar && resultados!=null){                                   
             for(int resultadoActual=0; resultadoActual < resultados.getLength(); resultadoActual++ ){//es decir el numero de ocurrencia del mismo tipo de categoría...
                 Node resultado = resultados.item(resultadoActual);//que aquí lo nombraron como item xD
             
@@ -183,25 +199,10 @@ public class CargaDeDatos {
                 }                        
             }                
         }           
-    }
+    }      
     
-    private void leerCita(NodeList citas){
-        if(citas!=null){
-            for(int citaActual=0; citaActual < citas.getLength(); citaActual++ ){//es decir el numero de ocurrencia del mismo tipo de categoría...
-                Node cita = citas.item(citaActual);//que aquí lo nombraron como item xD
-            
-                if(cita.getNodeType()== Node.ELEMENT_NODE){//aquí reviso si es un elemnto que por lo tanto contiene atributos [es decir si p.ej es un admin con su DPI, nombre, contra y codigo...
-                    Element elemento = (Element) cita;                
-                
-                    creadorRegistros.crearCita(elemento.getAttribute("CODIGO"), elemento.getAttribute("PACIENTE"), elemento.getAttribute("MEDICO"), elemento.getAttribute("ESPECIALIDAD"),
-                    elemento.getAttribute("FECHA"), elemento.getAttribute("HORA"));
-                }                        
-            }                
-        }                    
-    }
-    
-    private void leerConsulta(NodeList consultas){
-       if(consultas!=null){
+    private void leerConsulta(boolean debeCargar, NodeList consultas){
+       if(debeCargar && consultas!=null){
          for(int consultaActual=0; consultaActual < consultas.getLength(); consultaActual++ ){//es decir el numero de ocurrencia del mismo tipo de categoría...
             Node consulta = consultas.item(consultaActual);//que aquí lo nombraron como item xD
             

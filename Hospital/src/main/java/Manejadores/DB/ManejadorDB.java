@@ -34,7 +34,8 @@ public class ManejadorDB {
         }catch(SQLException sqlE){
             System.out.println("error al conectar con la DB: "+ sqlE.getMessage());
         }
-        
+       
+        System.out.println("");
     }
     
     public void cerrarConexion(){

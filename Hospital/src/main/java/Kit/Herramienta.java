@@ -23,6 +23,18 @@ public class Herramienta {//aquí iran las herramientas que no encajen con las c
         
     }     
     
+    public String darPaginaPerfil(String tipoUsuario){
+        if(tipoUsuario.equals("Paciente")){
+            return "";//El perfil del paciente :v xD
+        }if(tipoUsuario.equals("Medico")){
+            return "";
+        }if(tipoUsuario.equals("Administrador")){
+            return "";
+        }
+        
+        return "";//aquí la página del laboratirista...
+    }
+    
     public java.sql.Date devolverSQLDate(long fecha){//es long porque al obtner la fecha actual se obtiene en iliseg los cuales son de tipo long [porque son muuuy largos]
         return new java.sql.Date (fecha);               
     }

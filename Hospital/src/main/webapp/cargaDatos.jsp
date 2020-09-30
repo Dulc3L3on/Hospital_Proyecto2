@@ -18,24 +18,26 @@ la DB, siempre y cuando esté vacía... esto por medio del if--%>
         <title>LlenadoDB</title>
         <script src = "acciones.js"></script>
         
-        <!--Aquí debería hacer la recpeción del objeto conexion... para mandarselo al manejadorXML-->
+        <!--Aquí debería hacer la recpeción del objeto conexion... para mandarselo al manejadorXML quien será el único en importarse, puesto que dentro de sí tiene a las clases que tiene todo lo que requiere :3-->
        
     </head>
     <body>    
-        <%if(request.getParameter("aceptacion").equalsIgnoreCase("ACEPTADO")){%>
-        <%%>
+        <%if(request.getParameter("aceptacion").equalsIgnoreCase("ACEPTADO")){%><!--a mi parecer, como aún no se ha creado el btn entonces al tener "ACEPTAR" como la comparación no habrá problema, puesto que aún no existe el componente...-->
         
-        <center>
-            <h1>CARGA DE DATOS</h1>
-            <h4>Presione aceptar para abastecer el sistema hospitalario
-                </br>con la información necesaria para su funcionamiento</h4>
-            <br/>            
-        </center>        
-         <form method="POST" action="cargaDatos.jsp">
+        
+        <%}else{%>
+        
             <center>
-                <input type="submit" name="aceptacion" value="ACEPTAR" onclick="cambiarValorParaCarga()">
-            </center>            
-        </form>   
+                <h1>CARGA DE DATOS</h1>
+                <h4>Presione aceptar para abastecer el sistema hospitalario
+                    </br>con la información necesaria para su funcionamiento</h4>
+                <br/>            
+            </center>        
+             <form method="POST" action="cargaDatos.jsp">
+                <center>
+                    <input type="submit" name="aceptacion" value="ACEPTAR" onclick="cambiarValorParaCarga()">
+                </center>            
+            </form>   
         
 
     </body>
