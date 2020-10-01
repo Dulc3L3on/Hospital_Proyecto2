@@ -49,8 +49,7 @@ public class Herramienta {//aquí iran las herramientas que no encajen con las c
             System.out.println("error al convetir la fecha");
         }
         
-        return null;
-        
+        return null;        
     }
     
     public void estblecerUltimosIDnumericos(int[] ultimosID){

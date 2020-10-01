@@ -29,6 +29,11 @@ public class CargaDeDatos {
          creadorRegistros.establecerControladorIndices(controladorIndices);
     } 
     
+//  public CargaDeDatos(DataSource dataSource){
+//         creadorRegistros = new CreadorDeCarga(dataSource);
+//         controladorIndices.recuperarUltimosIndices();
+//         creadorRegistros.establecerControladorIndices(controladorIndices);
+//    } 
     /**
      *Método llamado en al iniciar la aplicación, siempre y cuando
      * la DB aún esté vacía...

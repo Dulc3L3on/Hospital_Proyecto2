@@ -28,7 +28,10 @@ public class ManejadorXML {
     public ManejadorXML(Connection conexionDB){//recuerda que este solo deberá ser ejecutado cuando la DB esté vacía...
         clasificador = new CargaDeDatos(conexionDB);        
     }
-    
+
+//    public ManejadorXML(DataSource dataSource){//recuerda que este solo deberá ser ejecutado cuando la DB esté vacía...
+//        clasificador = new CargaDeDatos(dataSource);        
+//    }
     
     public void leerXML(boolean listadoALlenar[], String nombreArchivo){             
         
@@ -56,4 +59,11 @@ import org.jdom2.Document;         // |
 import org.jdom2.Element;          // |\ Librerías
 import org.jdom2.JDOMException;    // |/ JDOM
 import org.jdom2.input.SAXBuilder;
+*/
+
+/*
+ <%if(request.getParameter("carga").equalsIgnoreCase("ACEPTADO")){//<!--a mi parecer, como aún no se ha creado el btn entonces al tener "ACEPTAR" como la comparación no habrá problema, puesto que aún no existe el componente...-->        
+                            //se manda a llamar al método para guardar el archivo y posterior a ello agarrar ... busca como podrías obtener el nombre del archivo de tal manera que emplees la forma normal...s i no puedes entonces emplea la lib...                            
+                            manejadorXML.leerXML(verificador.darListadoVacios(), request.getParameter("cargaArchivo"));
+                        }%>
 */

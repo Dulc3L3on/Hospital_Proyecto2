@@ -56,7 +56,7 @@ public class CreadorDeCarga {//si hay algo que pueda generalizar, será colocado
             //mandarás a llamar al objeto que se encarga de concatenar el tipo de categoría y código del que surgió el error            
             
             //aquí va el if para que se exe solo cuando se esté creando de a 1... al menos en una sesión...
-            System.out.println("erro al cargar Admin -> " + sqlE.getMessage());
+            System.out.println("error al cargar Admin -> " + sqlE.getMessage());
             JOptionPane.showMessageDialog(null, "Surgió un error al registrar\nal nuevo administrador", "error de creacion", JOptionPane.ERROR_MESSAGE);
         }                               
     }/*terminado*///al menos lo que te solicitaron...

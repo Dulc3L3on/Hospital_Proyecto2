@@ -11,6 +11,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -20,11 +22,21 @@ import javax.swing.JOptionPane;
                         //además de tener a los métodos con los que crearán los registros hechos por el administrador también irán todos los métodos para creación que independientemente de dónde sean llamados
 public class Creacion {//harán lo mismo puesto que la clase que requiere de una pequeña variación del proceso, se encargará de ello... estos son identificacbles puesto que poseen el atrib esCarga, para saber si debe o no mostrar el msje de error
       private Connection conexion;
+//      private DataSource fuenteDatos;
       private Herramienta herramienta = new Herramienta();
                 
       public Creacion(Connection conexionDB){
           conexion = conexionDB;
       } 
+      
+//      public Creacion(DataSource dataSource){
+//          fuenteDatos = dataSource;
+//          try {
+//              conexion = fuenteDatos.getConnection();
+//          } catch (SQLException ex) {
+//              System.out.println("error al establecer la conexion");
+//          }
+//      } 
       
       public int crearDatosPersonales(boolean esCarga, String correo, String contrasenia, String telefono, String DPI){
         int idDelCreado=0;

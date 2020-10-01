@@ -18,28 +18,28 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Hospital Home</title>
-        <%! ManejadorDB manejadorDB  = new ManejadorDB();%>
-        <% manejadorDB.conectarConDB();%>
+        <%! ManejadorDB manejadorDB  = new ManejadorDB();%>        
         <%! VerificadorDB verificador = new VerificadorDB(manejadorDB.darConexion());%>
-        <%! Herramienta herramienta = new Herramienta();%>        
-        <%!Sesion sesion = new Sesion(manejadorDB.darConexion());%>        
-        <%LocalDate hoy = LocalDate.now();%>
+        <%! Herramienta herramienta = new Herramienta();%>                     
+        <%!LocalDate hoy = LocalDate.now();%>
     </head>
     <body>      
-          <%if(verificador.debeLlenarse()){%>        
-                <%--redirecciono a la página de carga...--%>          
-                <meta http-equiv="refresh" content="1"; url="cargaDatos.jsp">        <!--tambien podría hacerse directamente con un response.senRedirect("a donde se redirijirá...")-->                  
-          <%}else{
+          <%if(verificador.debeLlenarse()){       
+                //request.setAttribute("conexion", manejadorDB.darConexion());                
+                request.getRequestDispatcher("cargaDatos.jsp").forward(request, response);
+                //response.sendRedirect("cargaDatos.jsp");                
+          }else{                    
                 if(request.getParameter("aceptacion").equals("INGRESAR") && verificador.verificarLogueo(request.getParameter("tipoUsuario"), request.getParameterValues("logueo"))!=null){
                     //se manda el objeto tipo usuario generado...
-                    response.sendRedirect(herramienta.darPaginaPerfil(request.getParameter("tipoUsuario")));//se obtiene el usario del cbBox... que tiene por default paciente...       
-
-                %>
-                <%}if(request.getParameter("aceptacion").equals("REGISTRAR") && verificador.verificarRegistro("Paciente", request.getParameterValues("registro"))){%><%--lo mismo digo aquí...--%>                                     
-                    <!--se manda a llamar al método para hacer el registro-->
+                    request.setAttribute("conexion", manejadorDB.darConexion());
+                    request.getRequestDispatcher(herramienta.darPaginaPerfil(request.getParameter("tipoUsuario"))).forward(request, response);//aquí le envío las mismísimas var de este obj preg/resp... eso quiere decir que no podré hacer ref a lo que hagan en la parte a la que envío la info...?
                     
-                    
-                <%}%>
+                    //lo comenté puesto que estoy estbleciendo atributos a enviar... por lo tanto encaja a la perfección un dispatcher y forward...
+                    //response.sendRedirect(herramienta.darPaginaPerfil(request.getParameter("tipoUsuario")));//se obtiene el usario del cbBox... que tiene por default paciente...                   
+          %>
+         <%}if(request.getParameter("aceptacion").equals("REGISTRAR") && verificador.verificarRegistro("Paciente", request.getParameterValues("registro"))){%><%--lo mismo digo aquí...--%>                                     
+                   <!--se manda a llamar al método para hacer el registro-->                                     
+         <%}%>
             <form method="POST" action="index.jsp">
                     <select name="tipoUsuario">
                         <option name="Paciente">Paciente</option>
@@ -126,20 +126,16 @@
                                         </th>
                                     </tr>                                 
                                     <tr>
-                                        <input type="submit" name="aceptacion" value="REGISTRAR">                                      
-                                        
+                                        <input type="submit" name="aceptacion" value="REGISTRAR">                                                                             
                                         <%--para este de registro, salga bien o no debo mantenerlo
-                                        en esta página para que después decida loguearse :3 --%>
-                                        
+                                        en esta página para que después decida loguearse :3, es decir no debo hacer nada mas que lo que en el if está --%>                                        
                                     </tr>
                                 </table>
-                            </form>
-                        
+                            </form>                        
                         </th>
                     </tr>        
-                </table>
-            
+                </table>            
             </div>
-       <%}%><%--fin del else...--%>
+          <%}%>
     </body>
 </html>
