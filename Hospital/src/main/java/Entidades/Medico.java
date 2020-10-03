@@ -6,6 +6,7 @@
 package Entidades;
 
 import Extras.DatosPersonales;
+import Kit.ListaEnlazada;
 import java.sql.Date;
 
 /**
@@ -13,15 +14,16 @@ import java.sql.Date;
  * @author phily
  */
 public class Medico extends Usuario{
+    String codigo;
     String numeroColegiado;    
-    String titulos[];//estos se volverán un obj...
+    ListaEnlazada<String> titulos;//estos se volverán un obj...
     int horaInicio;
     int horaFin;
-    Date fechaIncorporacion;//pues no haré nada con ella... y si no, pues entonces la cb a Date xD O A sql Date xD para no hacer tanta conversión xD 
-    DatosPersonales datosPersonales;
+    Date fechaIncorporacion;//pues no haré nada con ella... y si no, pues entonces la cb a Date xD O A sql Date xD para no hacer tanta conversión xD     
         
-    public Medico(String elCodigo, String elNombre, String elNumeroColegiado, int hrInicio, int hrFin, DatosPersonales losDatosPersonales, Date fecha, String especialidades[]){
-        super(elCodigo, elNombre, losDatosPersonales);
+    public Medico(String elCodigo, String elNombre, String elNumeroColegiado, int hrInicio, int hrFin, DatosPersonales losDatosPersonales, Date fecha, ListaEnlazada<String> especialidades){
+        super( elNombre, losDatosPersonales);
+        codigo = elCodigo;
         numeroColegiado=elNumeroColegiado;
         titulos=especialidades;//esto se obtnedrá en el switch... puesto que ada una tiene sus epecilidaddes
         horaInicio=hrInicio;

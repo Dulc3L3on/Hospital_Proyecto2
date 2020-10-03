@@ -74,9 +74,17 @@ public class Herramienta {//aquí iran las herramientas que no encajen con las c
             if(diasTrabajo[dia].equalsIgnoreCase(dias[dia])){
                 diasDeTRabajo[dia]=false;
             }
-        }
-        
+        }        
         return diasDeTRabajo;
+    }
+    
+    public String[] darDiasTrabajoLaboratorista(boolean[] diasTrabajo){
+        String[] diasDeTrabajo = new String[7];
+        
+        for (int dia = 0; dia < diasDeTrabajo.length; dia++) {//talvez agreguen otro día a la semana :v xD
+            diasDeTrabajo[dia]= String.valueOf(diasTrabajo[dia]);
+        }        
+        return diasDeTrabajo;//fijo fijo no surge error alguno... pues los vals los paso yopi xD 
     }
     
     public java.sql.Date devolverSQLDate(long fecha){//es long porque al obtner la fecha actual se obtiene en iliseg los cuales son de tipo long [porque son muuuy largos]

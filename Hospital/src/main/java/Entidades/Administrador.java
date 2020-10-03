@@ -6,15 +6,20 @@
 package Entidades;
 
 import Extras.DatosPersonales;
+import Manejadores.DB.BusquedaGeneral;
 
 /**
  *
  * @author phily
  */
 public class Administrador extends Usuario{        
+    private String codigo;
+    BusquedaGeneral buscador = new BusquedaGeneral();
     
     public Administrador(String elCodigo, String elNombre, DatosPersonales datosPersonales){
-        super(elCodigo, elNombre, datosPersonales);
+        super(elNombre, datosPersonales);
+        
+        codigo = elCodigo;
     }
     
     //RECUERDA: COn respecto a los datos personales, solo le enviarás el DPI y la contrasenia... y no olvides qu eeso no afecta al método del Papá...
@@ -50,8 +55,34 @@ public class Administrador extends Usuario{
     
     }       
     
-    public void buscarPacientes(){
+//    public void buscar(String buscado){
+//        if(!buscado.equals("Examen") && !buscado.equals("Consulta")){
+//            buscador.
+//        }
+//        
+//        
+//    }//esto deplano que mañana, porque será necesario tener la interfaz para saber al final como se hará para manejar la infor dada...
     
-    }
+    /**
+     *Método llamado al ser seleccionada una opcion del grupo de entidades
+     *de los radioBUttons
+     * @param tipoAModificar
+     */
+    public void modificarEntidad(String tipoAModificar){
+        switch(tipoAModificar){
+            case "Medico":
+            break;
+            
+            case "Laboratorista":
+            break;
+            
+            case "Paciente":
+            break;
+            
+            case "Administrador":
+            break;
+        }//igial mañana hay que ver esto...
+        
+    }//a mi parrecer este método deberia estar en modificaciones... aśi como con la búsuqueda...
     
 }

@@ -63,7 +63,7 @@ public class BusquedaGeneral {
      * @param buscado
      * @return
      */
-    public Usuario[] buscarUsuario(String buscado){
+    public Usuario[] buscarUsuarios(String buscado){
         String buscar ="SELECT * FROM "+ buscado;
         
         try(PreparedStatement instruccion = conexion.prepareStatement(buscar)){                       
@@ -74,7 +74,7 @@ public class BusquedaGeneral {
             resultado.first();
             
             for (int numero = 0; numero < usuarios.length; numero++) {
-                usuarios[numero] = integrador.formarEntidad(resultado, buscado);//a pesar de incluir a los documentos, aquí solo serán tomados los usuarios...
+                usuarios[numero] = integrador.formarEntidad(resultado, buscado);//a pesar de incluir a los documentos, aquí solo serán tomados los usuarios...                
                 resultado.next();
             }            
             
@@ -91,7 +91,7 @@ public class BusquedaGeneral {
      * @param tipoEstructura
      * @return
      */
-    public Estructura[] buscarEstructura(String tipoEstructura){//puesto que no debo hacer nada diferente en el proceso... así como en users...
+    public Estructura[] buscarEstructuras(String tipoEstructura){//puesto que no debo hacer nada diferente en el proceso... así como en users...
         String buscar ="SELECT * FROM "+ tipoEstructura;//ahi miras porqué colocaste un switch para los docs... [ya se que cb pero por si las msocas hay algo importante a tomar en cuenta, de ese método...
         
          try(PreparedStatement instruccion = conexion.prepareStatement(buscar)){                       
@@ -113,16 +113,8 @@ public class BusquedaGeneral {
          return estructuras;
     }
     
-    public Documento[] buscarDocumentos(String tipoDocumento){
-        switch(tipoDocumento){
-            case "Examen":
-               buscarExamen();
-            break;
-            
-            case "Consulta":
-               buscarConsultas();
-            break;
-            
+    public Documento[] buscarDocumentos(String tipoDocumento){//DEBE SER IGUAL PERO A LOS DE USUERS/ESTRUC...
+        switch(tipoDocumento){    
             case "Informe":
             break;
             
@@ -133,46 +125,7 @@ public class BusquedaGeneral {
         return documentos;
     }
     
-    public void buscarExamen(){
-        String buscar ="SELECT (codigo, nombre) FROM Examen";
-        
-        try(PreparedStatement instruccion = conexion.prepareStatement(buscar)){
-            ResultSet resultado = instruccion.executeQuery();
-            resultado.last();
-            
-            documentos = new Documento[resultado.getRow()];
-            resultado.first();
-            
-            for (int numero = 0; numero < documentos.length; numero++) {
-                formarEntidad(numero, resultado, "Examen");
-                resultado.next();
-            }
-            
-        }catch(SQLException e){
-            System.out.println("surgio un error al buscar el examen ");
-        }                
-    }
-    
-    public void buscarConsultas(){
-        String buscar ="SELECT (codigo, nombre) FROM Consulta";
-        
-        try(PreparedStatement instruccion = conexion.prepareStatement(buscar)){
-            ResultSet resultado = instruccion.executeQuery();
-            resultado.last();
-            
-            documentos = new Documento[resultado.getRow()];
-            resultado.first();
-            
-            for (int numero = 0; numero < documentos.length; numero++) {
-                formarEntidad(numero, resultado, "Consulta");
-                resultado.next();
-            }
-            
-        }catch(SQLException e){
-            System.out.println("surgio un error al buscar la consulta ");
-        }                
-        
-    }  
+   
  
     
 }

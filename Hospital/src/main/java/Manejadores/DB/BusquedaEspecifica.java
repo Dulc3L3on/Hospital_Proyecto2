@@ -5,10 +5,81 @@
  */
 package Manejadores.DB;
 
+import Kit.ListaEnlazada;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 /**
- *
+ *Esta clase está destinada a buscar los datos de 1 único elemento de 
+ * cualquiera de las entidades existentes en la DB * 
  * @author phily
  */
 public class BusquedaEspecifica {
+    Connection conexion = ManejadorDB.darConexion();
+    
+    public boolean[] buscarHorario(String codigoLaboratorista){
+        String buscar="SELECT * FROM Horario_Laboratorista WHERE codigoLaboratorista = ?";
+        boolean[] horario =null;
+        
+        try(PreparedStatement instruccion = conexion.prepareStatement(buscar)){
+            instruccion.setString(1, codigoLaboratorista);
+            
+            ResultSet resultado=instruccion.executeQuery();            
+            resultado.last();
+            horario = new boolean[resultado.getRow()];//bueno.. aunque fijo son 7 los daots que irá a traer xD :v
+            resultado.first();
+            
+            for (int dia = 0; dia < horario.length; dia++) {
+                horario[dia] = Boolean.parseBoolean(resultado.getString(dia+1));
+            }            
+        }catch(SQLException sqlE){
+            System.out.println("surgió un error al obtener el horario del laboratorista -> "+ sqlE.getMessage());
+            return null;
+        }        
+        return horario;
+    }    
+    
+     public ListaEnlazada<String> buscarTitulos(String codigoMedico){
+        String buscar ="SELECT nombre FROM Especialidad WHERE codigo = (SELECT codigoEspecialidad FROM Especialidad_Medico WHERE codigoMedico = ?)";
+        ListaEnlazada<String> listadoTitulos = new ListaEnlazada();
+        
+        try(PreparedStatement instruccion = conexion.prepareStatement(buscar)){
+            instruccion.setString(1, codigoMedico);
+            
+            ResultSet resultado = instruccion.executeQuery();           
+            
+            while(resultado.next()){
+                listadoTitulos.anadirAlFinal(resultado.getString(1));//siempre será 1, puesot que por cad registro que tenga, hay un solo código...                
+            }
+        }catch(SQLException sqlE){
+            System.out.println("surgió un error al buscar los titulos -> "+ sqlE.getMessage());
+            listadoTitulos.limpiar();
+        }
+        return listadoTitulos;
+    }
+    
+    /**
+     * Método empleado cuadno al médico le sean agregados títulos al sistema
+     * esto porque el médico tiene pero un arreglod e títulos de tipo String...
+     * @param nombreTitulo
+     * @return
+     */
+    public int buscarCodigoTitulo(String nombreTitulo){
+        String buscar ="SELECT codigo FROM Especialidad WHERE nombre = ?";
+        int codigoTitulo = 0;
+        
+        try(PreparedStatement instruccion = conexion.prepareStatement(buscar)){
+            instruccion.setString(1, nombreTitulo);
+            
+            ResultSet resultado = instruccion.executeQuery();//no habría alguna situación en la que al ir a buscar el título este no exista, así que no habrá problema con exe el getInt de una sola vez...
+            codigoTitulo = resultado.getInt(1);
+        }catch(SQLException sqlE){
+            System.out.println("surgio un error al recuperar el codigo del titulo -> "+ sqlE.getMessage());
+            codigoTitulo=0;//aqunque creo que cuando llegara a fallar, la variable se quedaría con un valor 0, ya sea porque no le llegó nada o porqu eel método mismo devulve 0 cuando falla...
+        }
+        return codigoTitulo;
+    }
     
 }

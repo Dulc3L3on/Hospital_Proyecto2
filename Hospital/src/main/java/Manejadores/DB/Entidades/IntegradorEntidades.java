@@ -15,6 +15,8 @@ import Entidades.Medico;
 import Entidades.Paciente;
 import Entidades.Usuario;
 import Extras.DatosPersonales;
+import Kit.ListaEnlazada;
+import Manejadores.DB.BusquedaEspecifica;
 import Manejadores.DB.BusquedaGeneral;
 import Reservaciones.Cita;
 import java.sql.ResultSet;
@@ -26,6 +28,7 @@ import java.sql.SQLException;
  */
 public class IntegradorEntidades {
     BusquedaGeneral buscador = new BusquedaGeneral();
+    BusquedaEspecifica buscadorMinucioso = new BusquedaEspecifica();
         
       public Usuario formarEntidad(ResultSet resultado, String tipo){ 
         Usuario usuario=null;
@@ -33,11 +36,11 @@ public class IntegradorEntidades {
         try {                        
             switch(tipo){
                 case "Medico"://la misma estructura que será aplicada a médico aquí en esta clase, la misma tendrán las demás entidades y también los documentos...
-                    usuario = formarMedico(buscador.buscarDatosPersonales(resultado.getString(6)), null, resultado);//falta crear el método para crear los títulos... es de búsqueda general...
+                    usuario = formarMedico(buscador.buscarDatosPersonales(resultado.getString(6)), buscadorMinucioso.buscarTitulos(resultado.getString(1)), resultado);//falta crear el método para crear los títulos... es de búsqueda general...
                     break;
                     
                 case "Laboratorista":
-                    usuario = formarLaboratorista(buscador.buscarDatosPersonales(resultado.getString(5)), null, resultado);
+                    usuario = formarLaboratorista(buscador.buscarDatosPersonales(resultado.getString(5)), buscadorMinucioso.buscarHorario(resultado.getString(1)), resultado);
                     break;
                     
                 case "Paciente":
@@ -54,7 +57,7 @@ public class IntegradorEntidades {
         return usuario;
     }/*terminado*/      
 
-    private Medico formarMedico(DatosPersonales datosPersonales, String[] titulos, ResultSet resultado){
+    private Medico formarMedico(DatosPersonales datosPersonales, ListaEnlazada<String> titulos, ResultSet resultado){
         Medico medico=null;//puest si sale bien la cosa se sutituirá su val, sino pues volverá a ser nulo...
         
         if(datosPersonales!=null && titulos!=null){
@@ -88,7 +91,7 @@ public class IntegradorEntidades {
        
        if(datosPersonales!=null){
            try{
-               paciente = new Paciente(resultado.getString(1), resultado.getString(2), resultado.getString(3), resultado.getDate(4), resultado.getString(5), resultado.getString(6), datosPersonales);
+               paciente = new Paciente(resultado.getInt(1), resultado.getString(2), resultado.getString(3), resultado.getDate(4), resultado.getString(5), resultado.getString(6), datosPersonales);
            }catch(SQLException sqlE){
                System.out.println("srgió un error al formar al paciente -> "+ sqlE.getMessage());
                paciente = null;

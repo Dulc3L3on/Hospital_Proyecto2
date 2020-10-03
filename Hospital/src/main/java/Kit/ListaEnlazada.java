@@ -104,6 +104,12 @@ public class ListaEnlazada <E>{
     public int darNumeroNodoCoincidente(){                
         return numeroNodoCoincidente;
     }
+    
+    public void limpiar(){
+        primerNodo = ultimoNodo =null;
+        tamanioLista=0;
+        nombreLista=null;//no he usado este campo, pero por si acaso xD
+    }
       
     /**
      * Añade un nuevo siguiente al nodo de la lista qué invocó

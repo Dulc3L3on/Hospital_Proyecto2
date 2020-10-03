@@ -9,11 +9,12 @@ package Extras;
  *
  * @author phily
  */
-public class DatosPersonales {
-    private String DPI;
+public class DatosPersonales {  
+    private int codigo;//esto para cuando se realicen las actualizaciones... o aún eliminaciones...
     private String correo;
     private String contrasenia;
     private String telefono;
+    private String DPI;
     
     public DatosPersonales(String email, String password, String numeroTelefono, String elDPI){
         DPI = elDPI;
@@ -34,6 +35,10 @@ public class DatosPersonales {
         telefono = nuevoTelefono;
     }    
 
+    public int darCodigo(){
+        return codigo;
+    }
+    
     public String darCorreo(){
         return correo;
     }

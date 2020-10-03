@@ -11,14 +11,12 @@ import Extras.DatosPersonales;
  *
  * @author phily
  */
-public class Usuario {
-    
-    public String codigo;
+public class Usuario {        
     public String nombre;
     DatosPersonales datosPersonales;
     
-    public Usuario(String elCodigo, String elNombre, DatosPersonales losDatosPersonales){
-        codigo = elCodigo;
+    public Usuario(String elNombre, DatosPersonales losDatosPersonales){
+        //codigo NO, puesto que lo tienen en diferentes tipos [str e int...]
         nombre= elNombre;        
         datosPersonales = losDatosPersonales;
     }    
@@ -56,6 +54,12 @@ public class Usuario {
     
     }     
     
+    public String darNombre(){
+        return nombre;
+    }
     
+    public DatosPersonales darDatosaPersonales(){
+        return datosPersonales;
+    }    
     
 }

@@ -62,14 +62,12 @@ public class Creacion {//harán lo mismo puesto que la clase que requiere de una
         try(PreparedStatement instruccion = conexion.prepareStatement(crear)){
             instruccion.setString(1, nombre);
             
-            instruccion.executeUpdate();
-            
+            instruccion.executeUpdate();            
         }catch(SQLException ex){                                               
            return false;
-        }
-        
+        }        
         return true;
-    }/*terminado*/
+    }/*terminado*///es empleado e cualquier cotexto en el que se agregue una especialidad [crec o modif] es decir carga, o manualmente [por el admin]... 
     
     public boolean crearEspecialidadMedico(boolean esCarga, String codigoMedico, int codigoEspecialidad){//como en este caso pasó por un proceso anteiror el codigo de especialidad para que le fuese enviado a este, no habrá problemas y menos con la interfaz, puesto que el número es daod por mi misma xD no por el usuario, así que no hay pierde xD
         String crear = "INSERT INTO Especialidad_Medico (?,?)";
