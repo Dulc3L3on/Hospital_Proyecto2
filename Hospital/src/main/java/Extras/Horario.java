@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Manejadores.DB;
+package Extras;
 
 /**
  *
  * @author phily
  */
-public class Busqueda {
+public class Horario {
     
 }

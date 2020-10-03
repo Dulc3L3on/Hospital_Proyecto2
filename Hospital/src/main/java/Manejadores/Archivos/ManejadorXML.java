@@ -25,14 +25,14 @@ import org.xml.sax.SAXException;
 public class ManejadorXML {
     CargaDeDatos clasificador;    
     
-    public ManejadorXML(Connection conexionDB){//recuerda que este solo deberá ser ejecutado cuando la DB esté vacía...
-        clasificador = new CargaDeDatos(conexionDB);        
+//    public ManejadorXML(Connection conexionDB){//recuerda que este solo deberá ser ejecutado cuando la DB esté vacía...
+//        clasificador = new CargaDeDatos(conexionDB);        
+//    }
+
+    public ManejadorXML(){
+        clasificador = new CargaDeDatos();
     }
 
-//    public ManejadorXML(DataSource dataSource){//recuerda que este solo deberá ser ejecutado cuando la DB esté vacía...
-//        clasificador = new CargaDeDatos(dataSource);        
-//    }
-    
     public void leerXML(boolean listadoALlenar[], String nombreArchivo){             
         
         try{

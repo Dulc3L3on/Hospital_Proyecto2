@@ -6,6 +6,7 @@
 package Verificadores;
 
 import Entidades.Usuario;
+import Manejadores.DB.ManejadorDB;
 import Manejadores.DB.Registro;
 import Manejadores.DB.Sesion;
 import java.sql.Connection;
@@ -18,7 +19,7 @@ import java.sql.Statement;
  * @author phily
  */
 public class VerificadorDB {
-    private Connection conexion;
+    private static Connection conexion;
     Registro registrador;
     Sesion sesion;
     Usuario usuario;//esto es para el logueo... que devolverán los métodos que provienen de la clase con el mismo nombre... y que mandarás a la página que corresponde... a la cual te dirigiras según el tipo de usuario por medio del método para redirigir introducido en el response...
@@ -27,10 +28,16 @@ public class VerificadorDB {
     boolean estaLlena[];
     
     
-    public VerificadorDB(Connection conexionDB){
-        conexion = conexionDB;
-        registrador = new Registro(conexion);
-        sesion = new Sesion(conexion);
+//    public VerificadorDB(Connection conexionDB){
+//        conexion = conexionDB;
+//        registrador = new Registro(conexion);
+//        sesion = new Sesion(conexion);
+//    }
+    
+    public VerificadorDB(){
+        conexion = ManejadorDB.darConexion();
+        registrador = new Registro();
+        sesion = new Sesion();
     }
     
     private void verificarLlenura(){//todavía no he decidido si llegase a pasar que no se llenan todas sino solo algunas, le voy a dejar que lo ingrese manualmente o le seguiré pidiendo que la llene... si se lo voy a permitir entonces tendría que hacer FALSE La var que indicasi debe llenarse...
@@ -83,8 +90,9 @@ public class VerificadorDB {
     }
     
     /*aquí hacia abajito los métodos para verificar lo del logueo y lo del registro :3*/
-    public Usuario verificarLogueo(String tipoUsuario, String[] datosLogueo){//el tipo de usario será obtenido según la selección del cbBox...        
-//        
+    public Usuario verificarLogueo(String tipoUsuario, String[] datosLogueo){//0-> usuario, 1-> contrasenia...    aquí será donde se encripte puesto que mando un arreglo desde la interfaz... xD
+   //el tipo de usario será obtenido según la selección del cbBox...        
+//                  
 //      if(tipoUsuario.equals("Paciente")){
 //          //aquí y en cada uno de los casos, almacenarías el usuario en su form amás general, de tal manera que si es null puedas saber que devolver...
 //      }

@@ -19,42 +19,29 @@ import javax.sql.DataSource;
  */
 public class ManejadorDB implements Serializable{
     
-    private Connection conexion;//se encarga de conectar o desconectar al usuario actual con la DB para interactuar con las estructuras poseedoras de la información
+    private static Connection conexion;//por el patrón SINGLENTON, solo podrá existir una versión de esta instacia, mietras esté viva...
     private DataSource dataSource;
-    
-    private final String URL_BASEDEDATOS="jdbc:mysql://localhost:3306/HOSPITAL?useSSL=false";
-    private final String NOMBRE_USUARIO="root";
-    private final String CONTRASENIA="adminL3on@";//ahi lo revisas mañana xD       
-    
+    private static ManejadorDB manejadorDB;
+
     public ManejadorDB(){
         conectarConDB();
     }
     
     public void conectarConDB(){
-        try {
-            Context initContext = new InitialContext();
-            Context envContext = (Context) initContext.lookup("java:/comp/env");
-            dataSource = (DataSource) envContext.lookup("jdbc/HOSPITAL");
-            conexion = dataSource.getConnection();
-            
-            System.out.println("SI ME METO AQUI :0");
+        try {       
+                Context initContext = new InitialContext();
+                Context envContext = (Context) initContext.lookup("java:/comp/env");
+                dataSource = (DataSource) envContext.lookup("jdbc/HOSPITAL");
+                conexion = dataSource.getConnection();
+                System.out.println("SI ME METO AQUI :0, pues aún no existo :v xD");
+       
         } catch (NamingException exe) {
             System.out.println("error al establecer la fuente de datos");
         } catch (SQLException ex) {
             System.out.println("error al obtener la conexion");
         }
     }
-    
-   /* public void conectarConDB(){
-        try{
-            conexion = DriverManager.getConnection(URL_BASEDEDATOS, NOMBRE_USUARIO, CONTRASENIA);                      
-        }catch(SQLException sqlE){
-            System.out.println("error al conectar con la DB: "+ sqlE.getMessage());
-        }
-       
-        System.out.println("");
-    }*/
-    
+ 
     public void cerrarConexion(){
         try{
             conexion.close();
@@ -62,15 +49,14 @@ public class ManejadorDB implements Serializable{
             System.out.println("surgió un error al cerrar la DB -> "+sqlE.getMessage());
         }
     }
+
     
-//    public DataSource darDataSource(){
-//        return dataSource;
-//    }
-    
-    public Connection darConexion(){
+    public static Connection darConexion(){
+       if(manejadorDB==null){
+           manejadorDB= new ManejadorDB();
+       }        
         return conexion;        
-    }
-    
+    }    
     
 }
 /*TE RECUERDAS

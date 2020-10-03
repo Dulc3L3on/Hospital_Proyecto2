@@ -31,9 +31,9 @@
           }else{                    
                 if(request.getParameter("aceptacion").equals("INGRESAR") && verificador.verificarLogueo(request.getParameter("tipoUsuario"), request.getParameterValues("logueo"))!=null){
                     //se manda el objeto tipo usuario generado...
-                    request.setAttribute("conexion", manejadorDB.darConexion());
-                    request.getRequestDispatcher(herramienta.darPaginaPerfil(request.getParameter("tipoUsuario"))).forward(request, response);//aquí le envío las mismísimas var de este obj preg/resp... eso quiere decir que no podré hacer ref a lo que hagan en la parte a la que envío la info...?
+                    //request.setAttribute("conexion", manejadorDB.darConexion());//esto no porque al final de cuentas se empleará el patron singlenton xD
                     
+                    //request.getRequestDispatcher(herramienta.darPaginaPerfil(request.getParameter("tipoUsuario"))).forward(request, response);//aquí le envío las mismísimas var de este obj preg/resp... eso quiere decir que no podré hacer ref a lo que hagan en la parte a la que envío la info...?                    
                     //lo comenté puesto que estoy estbleciendo atributos a enviar... por lo tanto encaja a la perfección un dispatcher y forward...
                     //response.sendRedirect(herramienta.darPaginaPerfil(request.getParameter("tipoUsuario")));//se obtiene el usario del cbBox... que tiene por default paciente...                   
           %>

@@ -15,10 +15,14 @@ import java.sql.SQLException;
  * @author phily
  */
 public class Sesion {
-    Connection conexion;
+    private static Connection conexion;
     
-    public Sesion(Connection conexionDB){
-        conexion=conexionDB;
+//    public Sesion(Connection conexionDB){
+//        conexion=conexionDB;
+//    }
+    
+    public Sesion(){
+        conexion = ManejadorDB.darConexion();
     }
                                                             //aquí ya se recibe la contrasenia encriptada...puesto que en la DB se almacenó de esa manera...
     public String[] loguearAdministrador(String codigo, String contrasenia){//puesto que no le agregaron un correo :v xD entonces que ingrese el código xD

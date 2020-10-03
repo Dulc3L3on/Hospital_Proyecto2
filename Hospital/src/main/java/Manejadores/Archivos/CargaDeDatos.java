@@ -8,7 +8,6 @@ package Manejadores.Archivos;
 import Kit.ControlIndices;
 import Kit.Herramienta;
 import Manejadores.DB.CreadorDeCarga;
-import java.sql.Connection;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -23,17 +22,18 @@ public class CargaDeDatos {
     Herramienta herramienta = new Herramienta();   
     ControlIndices controladorIndices = new ControlIndices();
     
-    public CargaDeDatos(Connection conexionDB){
-         creadorRegistros = new CreadorDeCarga(conexionDB);
-         controladorIndices.recuperarUltimosIndices();
-         creadorRegistros.establecerControladorIndices(controladorIndices);
-    } 
-    
-//  public CargaDeDatos(DataSource dataSource){
-//         creadorRegistros = new CreadorDeCarga(dataSource);
+//    public CargaDeDatos(Connection conexionDB){
+//         creadorRegistros = new CreadorDeCarga(conexionDB);
 //         controladorIndices.recuperarUltimosIndices();
 //         creadorRegistros.establecerControladorIndices(controladorIndices);
-//    } 
+//    }     
+
+     public void CargaDatos(){
+         creadorRegistros = new CreadorDeCarga();
+         controladorIndices.recuperarUltimosIndices();
+         creadorRegistros.establecerControladorIndices(controladorIndices);
+     }
+        
     /**
      *Método llamado en al iniciar la aplicación, siempre y cuando
      * la DB aún esté vacía...

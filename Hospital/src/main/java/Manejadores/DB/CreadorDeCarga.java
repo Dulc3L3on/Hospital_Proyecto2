@@ -19,28 +19,35 @@ import javax.swing.JOptionPane;
  * @author phily
  */
 public class CreadorDeCarga {//si hay algo que pueda generalizar, será colocado aquí, de lo contrario, irá en su clase específica de la entidad ó si miras que no serán tantos los metodos, entonces aquí estarán los métodos por entidad, a sabiendas de que solo haBrá 1 [no creo que hayan más, pero si sí, sería max 2 [o talvez 3 xD]
-    Connection conexion;
-    Herramienta herramienta = new Herramienta();
-    Creacion creacion;
-    ControlIndices controladorIndices;
-    ListaEnlazada<String> listaEspecialidades = new ListaEnlazada();
-    
+    private static Connection conexion;
+    private Herramienta herramienta = new Herramienta();
+    private Creacion creacion;
+    private ControlIndices controladorIndices;
+    private ListaEnlazada<String> listaEspecialidades = new ListaEnlazada();   
     
     //si la cosa sale mal al crear entonces aquí se queda el error, por lo tanto no se crea nada de nada... pero eso no implica que en el exterior suceda eso...
-    public CreadorDeCarga(Connection conexionDB){
-        conexion=conexionDB;        
-        creacion = new Creacion(conexion);
-    }//recuerda que la instanciacion de esta clase y de sus hermanas accionistas en la DB xd, deberá hacerse en el punto donde se haga el logueo, luego de haber instanciado el manejadorDB...
+//    public CreadorDeCarga(Connection conexionDB){
+//        conexion=conexionDB;        
+//        creacion = new Creacion(conexion);
+//    }//recuerda que la instanciacion de esta clase y de sus hermanas accionistas en la DB xd, deberá hacerse en el punto donde se haga el logueo, luego de haber instanciado el manejadorDB...
+//    
     
-    
+    public CreadorDeCarga(){
+        conexion = ManejadorDB.darConexion();
+        creacion = new Creacion();
+    }
     
     public void crearAdministrador(String codigo, String nombre, String DPI, String contrasenia){
         String crear = "INSERT INTO Administrador (?,?,?,?)";
         
         try(PreparedStatement instruccion = conexion.prepareStatement(crear)){
             String contraseniaEncriptada=herramienta.encriptarContrasenia(contrasenia);
+            int parteNumerica= herramienta.extraerParteNumerica(5, codigo);
             
-            if(contraseniaEncriptada!=null){//te RECUERDAS de cb la condi para verificar que todo haya salido bien, si es que el método no devuelve un string...
+            //no se si agregar lo de la parte numérica... pero de todos modos debería cimplir con el patrón así que... lo agergaré xD
+            if(!contraseniaEncriptada.isBlank() && parteNumerica!=0){//te RECUERDAS de cb la condi para verificar que todo haya salido bien, si es que el método no devuelve un string...
+                controladorIndices.establecerUltimoIndice(5, parteNumerica);//y de esta manera ya en el proceso normal, no habrán problemas con el código xD... de todos modos SÍ se alamcenará con su parte en string... así como lo diern... xD
+                
                 instruccion.setString(1, codigo);
                 instruccion.setString(2, nombre);
                 instruccion.setString(3, DPI);
@@ -69,8 +76,7 @@ public class CreadorDeCarga {//si hay algo que pueda generalizar, será colocado
         if(codigoDatosPersonales>0){
             try(PreparedStatement instruccion = conexion.prepareStatement(crear)){
                 int paciente = Integer.parseInt(codigo);
-                java.sql.Date fechaNacimiento =herramienta.devolverSQLDate(herramienta.convertirStringAUtilDate(birth).getTime());//así cuando lanze un null la conversión str->utilD me llevará al catch u n ose habrán dejado alguno scampos con info y otros sin nada...
-                
+                java.sql.Date fechaNacimiento =herramienta.devolverSQLDate(herramienta.convertirStringAUtilDate(birth).getTime());//así cuando lanze un null la conversión str->utilD me llevará al catch u n ose habrán dejado alguno scampos con info y otros sin nada...                
                 
                 instruccion.setInt(1, paciente);
                 instruccion.setString(2, nombre);
@@ -100,11 +106,13 @@ public class CreadorDeCarga {//si hay algo que pueda generalizar, será colocado
         
         String crear ="INSERT INTO Medico (?,?,?,?,?,?,?)";        
         int codigoDatosPersonales= creacion.crearDatosPersonales(true, correo, contrasenia, telefono, DPI);//puesto que esta entidad [médico] requiere de este código        
+        int parteNumerica = herramienta.extraerParteNumerica(4, codigo);// MED-
         
-        if(codigoDatosPersonales>0){//Puesto que Médico SÍ DEPENDE de este valor para crear correctamente su registro, por lo ual si falla, NO DEBERÁ  de registrarse al médico al menos no automáticamenente, sino manual, esto por medio de la creación que puede hacer el administrador...
+        if(codigoDatosPersonales>0 && parteNumerica!=0){//Puesto que Médico SÍ DEPENDE de este valor para crear correctamente su registro, por lo ual si falla, NO DEBERÁ  de registrarse al médico al menos no automáticamenente, sino manual, esto por medio de la creación que puede hacer el administrador...
             try(PreparedStatement instruccion = conexion.prepareStatement(crear)){
                 java.sql.Date fechaInicio=herramienta.devolverSQLDate(herramienta.convertirStringAUtilDate(fechaIncorporacion).getTime());
-            
+                controladorIndices.establecerUltimoIndice(2, parteNumerica);
+                
                 instruccion.setString(1, codigo);
                 instruccion.setString(2, nombre);
                 instruccion.setString(3, numeroColegiado);
@@ -133,7 +141,7 @@ public class CreadorDeCarga {//si hay algo que pueda generalizar, será colocado
             int codigoEspecialidad = agregarEspecialidad(titulos[numeroTitulo]);
             
             if(codigoEspecialidad!=0){//puesto que JAMÁS NUNCA dará # menores a 0...
-                creacion.crearEspecialidadMedico(true, codigoMedico, codigoEspecialidad);
+                creacion.crearEspecialidadMedico(true, codigoMedico, codigoEspecialidad);//WARNING! por el hecho de no corroborar que se add la espMed, es posible que hay una especialidad flotando, es decir que exista pero que ningún médico la posea...
             }
         }//solo te hace falta colocar las condis cuando suceda un error, sin importar
         //En cual de los 2 métodos de registro sucdio...
@@ -196,11 +204,13 @@ public class CreadorDeCarga {//si hay algo que pueda generalizar, será colocado
         
         String crear = "INSERT INTO Laboratorista (?,?,?,?,?,?)";
         int codigoDatosPersonales= creacion.crearDatosPersonales(true, correo, contrasenia, telefono, DPI);           
+        int parteNumerica = herramienta.extraerParteNumerica(4, codigo);//LAB-
         
-        if(codigoDatosPersonales>0){
+        if(codigoDatosPersonales>0 && parteNumerica!=0){
            try(PreparedStatement instruccion = conexion.prepareStatement(crear)){
                 java.sql.Date fechaInicio=herramienta.devolverSQLDate(herramienta.convertirStringAUtilDate(fechaIncorporacion).getTime());//si se atrapa el error
                 int codigoExamen = Integer.parseInt(codigoExamenAsignado);        
+                controladorIndices.establecerUltimoIndice(3, parteNumerica);
                       
                 instruccion.setString(1, codigo);
                 instruccion.setString(2, nombre);

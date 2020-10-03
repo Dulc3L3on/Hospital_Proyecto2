@@ -6,18 +6,39 @@
 package Manejadores.Archivos;
 
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import javax.swing.JOptionPane;
+import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 /**
  *
- * @author phily
+ * @author phily    
  */
 public class ManejadorDeArchivos {
-    String repositorio="../../../resource/CargaXML/";
+    String repositorio="Hospital/src/main/resource/CargaXML";
     
+    public void guardarArchivosCargados(HttpServletRequest request){
+        DiskFileItemFactory fabrica = new DiskFileItemFactory();
+        fabrica.setRepository(new File(repositorio));
+        ServletFileUpload carga = new ServletFileUpload(fabrica);        
+        
+        try{
+            List<FileItem> itemsSeleccionados = carga.parseRequest(request);
+            
+            for (FileItem itemsSeleccionado : itemsSeleccionados) {
+                File archivo = new File(repositorio, itemsSeleccionado.getName());
+            }                        
+        }catch(FileUploadException ex){
+            System.out.println("Ha surgido un error al cargar los archivos al servidor");
+        }
+    }
    
+    
+    public String darRutaXML(){
+        return repositorio;
+    }
     
 }

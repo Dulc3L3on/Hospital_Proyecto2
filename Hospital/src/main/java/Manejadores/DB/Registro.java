@@ -15,13 +15,17 @@ import java.sql.SQLException;
  * @author phily
  */
 public class Registro {
-    Connection conexion;
+    private static Connection conexion;
     Creacion creador;
     Herramienta herramienta = new Herramienta();
     
-    public Registro(Connection conexionDB){
-        conexion=conexionDB;
-        creador = new Creacion(conexionDB);
+//    public Registro(Connection conexionDB){
+//        conexion=conexionDB;
+//        creador = new Creacion(conexionDB);
+//    }
+    
+    public Registro(){
+        conexion = ManejadorDB.darConexion();        
     }
     
     public boolean registrarPaciente(String datos[]){//Este será exclusivamente hecho por y para el cliente...

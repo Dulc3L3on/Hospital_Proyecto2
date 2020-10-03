@@ -7,10 +7,7 @@
 <script languaje="JavaScript">
 
     function cambiarValorParaCarga(){
-        var elemento = document.getElementsByName("aceptacion").value="ACEPTADO";                                           
-            
-    }
-    
-
+        document.getElementsByName("carga").value="ACEPTADO";                                                               
+    }    
 </script>
 

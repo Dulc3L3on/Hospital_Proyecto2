@@ -11,9 +11,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -21,23 +18,17 @@ import javax.swing.JOptionPane;
 */
                         //además de tener a los métodos con los que crearán los registros hechos por el administrador también irán todos los métodos para creación que independientemente de dónde sean llamados
 public class Creacion {//harán lo mismo puesto que la clase que requiere de una pequeña variación del proceso, se encargará de ello... estos son identificacbles puesto que poseen el atrib esCarga, para saber si debe o no mostrar el msje de error
-      private Connection conexion;
-//      private DataSource fuenteDatos;
+      private static Connection conexion;
       private Herramienta herramienta = new Herramienta();
                 
-      public Creacion(Connection conexionDB){
-          conexion = conexionDB;
-      } 
-      
-//      public Creacion(DataSource dataSource){
-//          fuenteDatos = dataSource;
-//          try {
-//              conexion = fuenteDatos.getConnection();
-//          } catch (SQLException ex) {
-//              System.out.println("error al establecer la conexion");
-//          }
+//      public Creacion(Connection conexionDB){
+//          conexion = conexionDB;
 //      } 
       
+      public Creacion(){
+          conexion = ManejadorDB.darConexion();
+      }//por el patrón SInglenton...
+
       public int crearDatosPersonales(boolean esCarga, String correo, String contrasenia, String telefono, String DPI){
         int idDelCreado=0;
         String crear = "INSERT INTO Datos_Personales(?,?,?,?)";            
@@ -99,16 +90,17 @@ public class Creacion {//harán lo mismo puesto que la clase que requiere de una
     
     public boolean crearHorarioLaboratorista(boolean esCarga, String codigoLaboratorista, String[] diasTrabajo){//puesto que así lo recibe la tabla,pero recuerda que cuando obtengas estos datos los converitrás al tipo que corresponden... boolean... creo xD
         String crear ="INSERT INTO Horario_Laboratorista (?,?,?,?,?,?,?,?)";
+        boolean[] horario = herramienta.darDiasTrabajoLaboratoristas(diasTrabajo);
         
         try(PreparedStatement instruccion = conexion.prepareStatement(crear)){
             instruccion.setString(1, codigoLaboratorista);
-            instruccion.setString(2, diasTrabajo[0]);
-            instruccion.setString(3, diasTrabajo[1]);
-            instruccion.setString(4, diasTrabajo[2]);
-            instruccion.setString(5, diasTrabajo[3]);
-            instruccion.setString(6, diasTrabajo[4]);
-            instruccion.setString(7, diasTrabajo[5]);                                   
-            instruccion.setString(8, diasTrabajo[6]);                                   
+            instruccion.setString(2, String.valueOf(horario[0]));//aquí hago las conversiones de forma directa puesto que yo se que no pueden fallar... a menos que surgiera un probelma con el sistema...
+            instruccion.setString(3, String.valueOf(horario[1]));
+            instruccion.setString(4, String.valueOf(horario[2]));
+            instruccion.setString(5, String.valueOf(horario[3]));
+            instruccion.setString(6, String.valueOf(horario[4]));
+            instruccion.setString(7, String.valueOf(horario[5]));                                   
+            instruccion.setString(8, String.valueOf(horario[6]));                                   
             
             instruccion.executeUpdate();
             
