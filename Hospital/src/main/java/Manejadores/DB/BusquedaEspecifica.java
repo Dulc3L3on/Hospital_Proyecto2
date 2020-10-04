@@ -17,14 +17,14 @@ import java.sql.SQLException;
  * @author phily
  */
 public class BusquedaEspecifica {
-    Connection conexion = ManejadorDB.darConexion();
+    Connection conexion = ManejadorDB.darConexion();         
     
-    public boolean[] buscarHorario(String codigoLaboratorista){
+    public boolean[] buscarHorario(int codigoLaboratorista){
         String buscar="SELECT * FROM Horario_Laboratorista WHERE codigoLaboratorista = ?";
         boolean[] horario =null;
         
         try(PreparedStatement instruccion = conexion.prepareStatement(buscar)){
-            instruccion.setString(1, codigoLaboratorista);
+            instruccion.setInt(1, codigoLaboratorista);
             
             ResultSet resultado=instruccion.executeQuery();            
             resultado.last();
@@ -41,12 +41,12 @@ public class BusquedaEspecifica {
         return horario;
     }    
     
-     public ListaEnlazada<String> buscarTitulos(String codigoMedico){
+     public ListaEnlazada<String> buscarTitulos(int codigoMedico){
         String buscar ="SELECT nombre FROM Especialidad WHERE codigo = (SELECT codigoEspecialidad FROM Especialidad_Medico WHERE codigoMedico = ?)";
         ListaEnlazada<String> listadoTitulos = new ListaEnlazada();
         
         try(PreparedStatement instruccion = conexion.prepareStatement(buscar)){
-            instruccion.setString(1, codigoMedico);
+            instruccion.setInt(1, codigoMedico);
             
             ResultSet resultado = instruccion.executeQuery();           
             

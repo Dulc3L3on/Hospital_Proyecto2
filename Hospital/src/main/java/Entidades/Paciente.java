@@ -12,17 +12,15 @@ import java.sql.Date;
  *
  * @author phily
  */
-public class Paciente extends Usuario{
-    private int codigo;
+public class Paciente extends Usuario{    
     private String genero;
     private Date birth;
     private String peso;
     private String tipoSangre;   
     
     public Paciente(int elCodigo, String nombre, String sexo, Date cumpleanios, String weight, String tipoDeSangre, DatosPersonales datosPersonales){
-        super(nombre, datosPersonales);
+        super(elCodigo, nombre, datosPersonales);
         
-        codigo = elCodigo;
         genero = sexo;
         birth = cumpleanios;
         peso = weight;

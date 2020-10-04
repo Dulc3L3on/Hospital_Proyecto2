@@ -12,16 +12,14 @@ import java.sql.Date;
  *
  * @author phily
  */
-public class Laboratorista extends Usuario{
-    private String codigo;
+public class Laboratorista extends Usuario{    
     private String registroMS;
     private int examenAsignado;
     private Date fechaIncorporacion;
     private boolean[] horario;
     
-    public Laboratorista(String elCodigo, String elNombre, String elRegistroMS, int examen, Date fechaEntrada, DatosPersonales datosPersonales, boolean[] diasTrabajo){
-        super(elNombre, datosPersonales);
-        codigo = elCodigo;
+    public Laboratorista(int elCodigo, String elNombre, String elRegistroMS, int examen, Date fechaEntrada, DatosPersonales datosPersonales, boolean[] diasTrabajo){
+        super(elCodigo, elNombre, datosPersonales);        
         registroMS = elRegistroMS;
         examenAsignado = examen;
         fechaIncorporacion = fechaEntrada;

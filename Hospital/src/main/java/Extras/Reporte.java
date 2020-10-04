@@ -13,16 +13,15 @@ import java.sql.Date;
  */
 public class Reporte {
     
-    private String cadenaCodigo;
-    private int enteroCodigo;
+    private int codigo;
     private String nombreUsuario;
     private String nombreServicio;//es decir nombre de especialidad o nombre de examen...
     private int dia;
     private Date fecha;
     private int numero;//para sumas, conteos...
     
-    public Reporte(String codigo, String nombreDelUsuario, int elNumero){
-        cadenaCodigo= codigo;
+    public Reporte(int elCodigo, String nombreDelUsuario, int elNumero){
+        codigo= elCodigo;
         nombreUsuario = nombreDelUsuario;
         numero = elNumero;
     }

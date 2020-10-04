@@ -12,14 +12,11 @@ import Manejadores.DB.BusquedaGeneral;
  *
  * @author phily
  */
-public class Administrador extends Usuario{        
-    private String codigo;
+public class Administrador extends Usuario{            
     BusquedaGeneral buscador = new BusquedaGeneral();
     
-    public Administrador(String elCodigo, String elNombre, DatosPersonales datosPersonales){
-        super(elNombre, datosPersonales);
-        
-        codigo = elCodigo;
+    public Administrador(int elCodigo, String elNombre, DatosPersonales datosPersonales){
+        super(elCodigo, elNombre, datosPersonales);                
     }
     
     //RECUERDA: COn respecto a los datos personales, solo le enviarás el DPI y la contrasenia... y no olvides qu eeso no afecta al método del Papá...

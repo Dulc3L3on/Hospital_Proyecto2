@@ -61,7 +61,7 @@ public class Modificacion {//creo que los métodos solo serán específicos [es 
     }/*terminado*///será llamado sismpre que se modifiquen los datos de un médico, ya sea que cb o no los atributos que esta tabla contiene...
     
     /*RECUERDA: que recibe los datos de un onjeto MEDICO [1 de un arr o 1 obj en particular debido a la sesion...*/
-    public boolean modificarMedico(String codigo, String nombre, String numeroColegiado, int horaInicio, int horaFin, Date fechaIncorporacion){//va a ser el mismo para el ADMIN y el MEDICO
+    public boolean modificarMedico(int codigo, String nombre, String numeroColegiado, int horaInicio, int horaFin, Date fechaIncorporacion){//va a ser el mismo para el ADMIN y el MEDICO
         //independientemente de como recoja la info [con arr, con un obj o indiv [aunque esto último lo dudo] el metodo no tiene afección alguna
         //esto por el hecho de que siempre le terminarán pasando los datos en las posiciones que corresponden, sin importar dónde los halla tenido almacenados el enviaddor de la info... [arr, obj, o campo indiv xD]
         String modificar ="UPDATE Medico SET nombre = ? numeroColegiado = ? horaInicio = ? horaFin= ? WHERE codigo = ?";
@@ -73,7 +73,7 @@ public class Modificacion {//creo que los métodos solo serán específicos [es 
             instruccion.setInt(4, horaInicio);
             instruccion.setInt(5, horaFin);
             instruccion.setDate(6, fechaIncorporacion);
-            instruccion.setString(7, codigo);
+            instruccion.setInt(7, codigo);
             
             instruccion.executeUpdate();
         }catch(SQLException sqlE){
@@ -83,7 +83,7 @@ public class Modificacion {//creo que los métodos solo serán específicos [es 
         return true;        
     }/*terminado*/   
     
-    public void modificarListadoTitulos(String codigoMedico, ListaEnlazada<String> listadotitulosAntiguos, String[] listadoTitulosReciente){//no retornará nada puesto que el método para crear la EspMed, se encarga de mandar a decir esto y de arreglar dicho problema...
+    public void modificarListadoTitulos(int codigoMedico, ListaEnlazada<String> listadotitulosAntiguos, String[] listadoTitulosReciente){//no retornará nada puesto que el método para crear la EspMed, se encarga de mandar a decir esto y de arreglar dicho problema...
         if(listadoTitulosReciente.length> listadotitulosAntiguos.darTamanio()){
             //se llama al método para crear el título en la tabla espMed
             int tamanioOriginal = listadotitulosAntiguos.darTamanio();
@@ -115,7 +115,7 @@ public class Modificacion {//creo que los métodos solo serán específicos [es 
         return true;
     }/*terminado*///no sé si debería poder hacer este cb el admin, pero so si acaso... xD
     
-    public boolean modificarLaboratorista(String codigoLaboratorista, String nombre, String registroMS, int codigoExamenAsignado, Date fechaIncorporacion){
+    public boolean modificarLaboratorista(int codigoLaboratorista, String nombre, String registroMS, int codigoExamenAsignado, Date fechaIncorporacion){
         String modificar ="UPDATE Laboratorista nombre = ? registroMS = ? codigoExamenAsignado = ? fechaIncorporacion = ? WHERE codigo = ?";
             
         try(PreparedStatement instruccion = conexion.prepareStatement(modificar)){
@@ -123,7 +123,7 @@ public class Modificacion {//creo que los métodos solo serán específicos [es 
             instruccion.setString(2, registroMS);
             instruccion.setInt(3, codigoExamenAsignado);
             instruccion.setDate(4, fechaIncorporacion);
-            instruccion.setString(5, codigoLaboratorista);
+            instruccion.setInt(5, codigoLaboratorista);
             
             instruccion.executeUpdate();
         }catch(SQLException sqlE){
@@ -133,7 +133,7 @@ public class Modificacion {//creo que los métodos solo serán específicos [es 
         return true;        
     }/*terminado*/
     
-    public boolean modificarHorarioLaboratorista(String codigoLaboratorista, boolean[] horario){//Este el 
+    public boolean modificarHorarioLaboratorista(int codigoLaboratorista, boolean[] horario){//Este el 
         String modificar ="UPDATE Horario_Laboratorista domingo = ? lunes = ? martes =  ? miercoles = ? jueves = ? viernes = ? sabado = ? WHERE codigoLaboratorista = ?";
     
         try(PreparedStatement instruccion = conexion.prepareStatement(modificar)){
@@ -146,7 +146,7 @@ public class Modificacion {//creo que los métodos solo serán específicos [es 
             instruccion.setString(5, horarioTrabajo[4]);
             instruccion.setString(6, horarioTrabajo[5]);
             instruccion.setString(7, horarioTrabajo[6]);
-            instruccion.setString(8, codigoLaboratorista);
+            instruccion.setInt(8, codigoLaboratorista);
             
             instruccion.executeUpdate();
         }catch(SQLException sqlE){

@@ -45,15 +45,15 @@ public class CreadorDeCarga {//si hay algo que pueda generalizar, será colocado
             int parteNumerica= herramienta.extraerParteNumerica(5, codigo);
             
             //no se si agregar lo de la parte numérica... pero de todos modos debería cimplir con el patrón así que... lo agergaré xD
-            if(!contraseniaEncriptada.isBlank() && parteNumerica!=0){//te RECUERDAS de cb la condi para verificar que todo haya salido bien, si es que el método no devuelve un string...
-                controladorIndices.establecerUltimoIndice(5, parteNumerica);//y de esta manera ya en el proceso normal, no habrán problemas con el código xD... de todos modos SÍ se alamcenará con su parte en string... así como lo diern... xD
+            if(!contraseniaEncriptada.isBlank() && parteNumerica!=0){//te RECUERDAS de cb la condi para verificar que todo haya salido bien, si es que el método no devuelve un string...                
                 
-                instruccion.setString(1, codigo);
+                instruccion.setInt(1, parteNumerica);
                 instruccion.setString(2, nombre);
                 instruccion.setString(3, DPI);
                 instruccion.setString(4, contraseniaEncriptada);
                 
                 instruccion.executeUpdate();
+                controladorIndices.establecerUltimoIndice(5, parteNumerica);//y de esta manera ya en el proceso normal, no habrán problemas con el código xD... de todos modos SÍ se alamcenará con su parte en string... así como lo diern... xD
             }else{
                 //mandarás a llamar al objeto que se encarga de concatenar el tipo de categoría y código del que surgió el error
             }//a menos que halles la manera en que puedas saber cuando cualquiera de los 2 a fallado, las llamadas a la concatenación de los errores deberá estar en ambos lugares...
@@ -110,10 +110,9 @@ public class CreadorDeCarga {//si hay algo que pueda generalizar, será colocado
         
         if(codigoDatosPersonales>0 && parteNumerica!=0){//Puesto que Médico SÍ DEPENDE de este valor para crear correctamente su registro, por lo ual si falla, NO DEBERÁ  de registrarse al médico al menos no automáticamenente, sino manual, esto por medio de la creación que puede hacer el administrador...
             try(PreparedStatement instruccion = conexion.prepareStatement(crear)){
-                java.sql.Date fechaInicio=herramienta.devolverSQLDate(herramienta.convertirStringAUtilDate(fechaIncorporacion).getTime());
-                controladorIndices.establecerUltimoIndice(2, parteNumerica);
+                java.sql.Date fechaInicio=herramienta.devolverSQLDate(herramienta.convertirStringAUtilDate(fechaIncorporacion).getTime());                
                 
-                instruccion.setString(1, codigo);
+                instruccion.setInt(1, parteNumerica);
                 instruccion.setString(2, nombre);
                 instruccion.setString(3, numeroColegiado);
                 instruccion.setInt(4, horaInicio);
@@ -121,9 +120,9 @@ public class CreadorDeCarga {//si hay algo que pueda generalizar, será colocado
                 instruccion.setInt(6, codigoDatosPersonales);
                 instruccion.setDate(7, fechaInicio);                        
                 
-                instruccion.executeUpdate();
-                
-                agregarTitulos(codigo, titulos);//ya se que tenfo el código, pero no tendría chiste que se crearan los títulos cuando el médico no. :v xD duh! xD
+                instruccion.executeUpdate();                
+                controladorIndices.establecerUltimoIndice(2, parteNumerica);
+                agregarTitulos(parteNumerica, titulos);//ya se que tenfo el código, pero no tendría chiste que se crearan los títulos cuando el médico no. :v xD duh! xD
             }catch(NullPointerException | ClassCastException | SQLException e){//el null, debido al casteo el cual devulve null de string a utilDate cuando no pudo hacer la conversión...
                 //mandarás a llamar al objeto que se encarga de concatenar el tipo de categoría y código del que surgió el error
                 
@@ -136,7 +135,7 @@ public class CreadorDeCarga {//si hay algo que pueda generalizar, será colocado
         }                       
     }
    
-    private void agregarTitulos(String codigoMedico, String[] titulos){
+    private void agregarTitulos(int codigoMedico, String[] titulos){
         for (int numeroTitulo = 0; numeroTitulo < titulos.length; numeroTitulo++) {
             int codigoEspecialidad = agregarEspecialidad(titulos[numeroTitulo]);
             
@@ -165,7 +164,7 @@ public class CreadorDeCarga {//si hay algo que pueda generalizar, será colocado
                     listaEspecialidades.anadirAlFinal(titulo);
                 }else{
                     listaEspecialidades.agregarNuevoSiguiente(nodoCOincidente, titulo);                                        
-                }                                                  
+                }//al momento de guadar las consultas, ahora que recuerdo, no reviso si ya se habría agergado una con el mismo nombre... pero de todos modos no habrá fallos puesto que el nombre es su PK y yo lo pasp a ínus... xD :) :D                                                 
                 nodoCOincidente.establecerAtributoExtra("0");//esto me hace pensar que talvez si sería útil agregar una clase para Especialidad u otra, pero qu debería addse 1... pero es que después no se usará tanto, y eso no me parece...
                 return listaEspecialidades.darTamanio();
                 //aL FINAL de cuentas ya no incluí esta revisión en las consultas, puesto que si no existe en la DB 
@@ -209,10 +208,9 @@ public class CreadorDeCarga {//si hay algo que pueda generalizar, será colocado
         if(codigoDatosPersonales>0 && parteNumerica!=0){
            try(PreparedStatement instruccion = conexion.prepareStatement(crear)){
                 java.sql.Date fechaInicio=herramienta.devolverSQLDate(herramienta.convertirStringAUtilDate(fechaIncorporacion).getTime());//si se atrapa el error
-                int codigoExamen = Integer.parseInt(codigoExamenAsignado);        
-                controladorIndices.establecerUltimoIndice(3, parteNumerica);
+                int codigoExamen = Integer.parseInt(codigoExamenAsignado);                        
                       
-                instruccion.setString(1, codigo);
+                instruccion.setInt(1, parteNumerica);
                 instruccion.setString(2, nombre);
                 instruccion.setString(3, registroMS);                        
                 instruccion.setInt(4, codigoExamen);
@@ -220,8 +218,8 @@ public class CreadorDeCarga {//si hay algo que pueda generalizar, será colocado
                 instruccion.setInt(6, codigoDatosPersonales);                
             
                 instruccion.executeUpdate();
-                
-                if(!creacion.crearHorarioLaboratorista(true, codigoExamenAsignado, diasTrabajo)){
+                controladorIndices.establecerUltimoIndice(3, parteNumerica);                
+                if(!creacion.crearHorarioLaboratorista(true, parteNumerica, diasTrabajo)){
                     //llmarás al método para asignar a la lista de errores...
                 }
             }catch(NumberFormatException | NullPointerException | ClassCastException | SQLException e){ //me están dando ganas de colocar exception, puesto que no especificaré el tipo de error, o sí???
@@ -243,12 +241,13 @@ public class CreadorDeCarga {//si hay algo que pueda generalizar, será colocado
             java.sql.Date fechaInicio=herramienta.devolverSQLDate(herramienta.convertirStringAUtilDate(fecha).getTime());
             int horaRealizacion = Integer.parseInt(hora);            
             int codigoDeInforme = Integer.parseInt(codigoInforme);
+            int parteNumerica = herramienta.extraerParteNumerica(4, codigoMedico);
             //se manda a llamar al método que se encarga de generar los códigos a partir del número máximo hallado en el txt
             int codigoConsultaAtendida = controladorIndices.darIndiceCorrespondiente(1);
             
             instruccion.setInt(1, codigoConsultaAtendida);
             instruccion.setInt(2, paciente);
-            instruccion.setString(3, codigoMedico);            
+            instruccion.setInt(3, parteNumerica);            
             instruccion.setDate(5, fechaInicio);//PUESTO QUE tipo de consultas en la carga, es null
             instruccion.setInt(6, horaRealizacion);  
             
@@ -268,9 +267,10 @@ public class CreadorDeCarga {//si hay algo que pueda generalizar, será colocado
     String pathOrden, String pathResultado, String fechaRealizacion, String horaRealizacion){//si al final de cuentas lo cb a un campo normal,entonces establecerás un valor null a codMed para que no halla problemas, de todos modos en este punto ya se le habrá notificado...
         
         int codigoExamenAtendido = controladorIndices.darIndiceCorrespondiente(0);//aquí se manda a llamar al método para obtner el índice corresp, sip , deberá ser llamado aquí              
-                                       
-        if(crearExamenAtendido(codigoExamenAtendido, codigoLaboratorista, codigoExamen, codigoPaciente, fechaRealizacion, horaRealizacion)){//puede fallar ya sea por casteo [debido al codigoExamen o porque surgió algo en su interior...
-            int numeroOrden= creacion.crearOrden(null, pathOrden);//ya que no te lo dan y como de todos modos aunque hicieras otro método, al final de cuentas tendrías la col en null... a menos que colocaras algo como "si registros" apra hacer ref a que no se indicó el médico en la carga...
+        int parteNumerica = herramienta.extraerParteNumerica(4, codigoLaboratorista);
+        
+        if(crearExamenAtendido(codigoExamenAtendido, parteNumerica, codigoExamen, codigoPaciente, fechaRealizacion, horaRealizacion)){//puede fallar ya sea por casteo [debido al codigoExamen o porque surgió algo en su interior...
+            int numeroOrden= creacion.crearOrdenSinMedico(pathOrden);//ya que no te lo dan y como de todos modos aunque hicieras otro método, al final de cuentas tendrías la col en null... a menos que colocaras algo como "si registros" apra hacer ref a que no se indicó el médico en la carga...
             
             if(numeroOrden!=0){
                 crearResultadoConOrden(codigoResultado, codigoExamenAtendido, pathResultado, numeroOrden);//falta lo de los paths, puesto que no has leido
@@ -280,7 +280,7 @@ public class CreadorDeCarga {//si hay algo que pueda generalizar, será colocado
         }//no debes add a la lista, pueto que el método de exAt, ya lo hace...           
     }//aquí en este método se mandará a llamar al que se encarga de darle el id a exAt... dew esta manera se podrá detectar el error si es que hubiera uno...
     
-    public boolean crearExamenAtendido(int codigoExamenAtendido, String codigoLaboratorista, String codigoExamen, String codigoPaciente, String fechaDeRealizacion, String hora){
+    public boolean crearExamenAtendido(int codigoExamenAtendido, int codigoLaboratorista, String codigoExamen, String codigoPaciente, String fechaDeRealizacion, String hora){
         //por el hecho de ir a trar su código con el método que acude la rimera vez al arch y luego emplea al métooo para hacer el incre... creo que el parám de código
         //deberá desaparecer... puesto que aquí dentro se invocará al método para el incre y en el exterior en la clase a la que se acuda al iniciar el program, se
         //invocará el metodo para acceder al txt...
@@ -294,7 +294,7 @@ public class CreadorDeCarga {//si hay algo que pueda generalizar, será colocado
             int horaRealizacion = Integer.parseInt(hora);
             
             instruccion.setInt(1, codigoExamenAtendido);
-            instruccion.setString(2, codigoLaboratorista);
+            instruccion.setInt(2, codigoLaboratorista);
             instruccion.setInt(3, examen);
             instruccion.setInt(4, paciente);
             instruccion.setDate(5, fechaRealizacion);
@@ -355,10 +355,11 @@ public class CreadorDeCarga {//si hay algo que pueda generalizar, será colocado
             int paciente = Integer.parseInt(codigoPaciente);
             java.sql.Date fechaRealizacion =herramienta.devolverSQLDate(herramienta.convertirStringAUtilDate(fecha).getTime());
             int horaRealizacion = Integer.parseInt(hora);
+            int parteNumerica = herramienta.extraerParteNumerica(4, codigoMedico);
             
             instruccion.setInt(1, numeroCita);
             instruccion.setInt(2, paciente);            
-            instruccion.setString(4, codigoMedico);
+            instruccion.setInt(4, parteNumerica);
             instruccion.setString(5, tipoConsulta);
             instruccion.setDate(6, fechaRealizacion);
             instruccion.setInt(7, horaRealizacion);
@@ -369,7 +370,7 @@ public class CreadorDeCarga {//si hay algo que pueda generalizar, será colocado
             //se manda a llmar al método para que sea agregada la excepcion al listado...
             System.out.println("error al cargar la cita -> "+ sqlE.getMessage());
         }        
-    } 
+    }/*terminado*/
 
     public void crearConsulta(String tipo, String costo){
         listaEspecialidades.darNodoCoincidente(listaEspecialidades, tipo);

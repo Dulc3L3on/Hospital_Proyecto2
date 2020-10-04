@@ -168,6 +168,7 @@ public class CargaDeDatos {
                 if(cita.getNodeType()== Node.ELEMENT_NODE){//aquí reviso si es un elemnto que por lo tanto contiene atributos [es decir si p.ej es un admin con su DPI, nombre, contra y codigo...
                     Element elemento = (Element) cita;                
                 
+                    
                     creadorRegistros.crearCita(elemento.getAttribute("CODIGO"), elemento.getAttribute("PACIENTE"), elemento.getAttribute("MEDICO"), elemento.getAttribute("ESPECIALIDAD"),
                     elemento.getAttribute("FECHA"), elemento.getAttribute("HORA"));
                 }                        

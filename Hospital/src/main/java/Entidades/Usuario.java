@@ -12,11 +12,12 @@ import Extras.DatosPersonales;
  * @author phily
  */
 public class Usuario {        
+    public int codigo;
     public String nombre;
-    DatosPersonales datosPersonales;
+    public DatosPersonales datosPersonales;
     
-    public Usuario(String elNombre, DatosPersonales losDatosPersonales){
-        //codigo NO, puesto que lo tienen en diferentes tipos [str e int...]
+    public Usuario(int elCodigo, String elNombre, DatosPersonales losDatosPersonales){
+        codigo = elCodigo;
         nombre= elNombre;        
         datosPersonales = losDatosPersonales;
     }    
@@ -53,6 +54,10 @@ public class Usuario {
     public void verReportes(String tipoReporte){//aquí deplano que se colocará un switch, para que convergan todos los métodos que implemente la entidad en cuestión...
     
     }     
+    
+    public int darCodigo(){
+        return codigo;
+    }
     
     public String darNombre(){
         return nombre;

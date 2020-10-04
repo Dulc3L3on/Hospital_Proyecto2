@@ -19,7 +19,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Hospital Home</title>
         <%! ManejadorDB manejadorDB  = new ManejadorDB();%>        
-        <%! VerificadorDB verificador = new VerificadorDB(manejadorDB.darConexion());%>
+        <%! VerificadorDB verificador = new VerificadorDB();%>
         <%! Herramienta herramienta = new Herramienta();%>                     
         <%!LocalDate hoy = LocalDate.now();%>
     </head>

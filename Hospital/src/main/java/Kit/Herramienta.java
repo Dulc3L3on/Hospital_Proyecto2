@@ -41,6 +41,12 @@ public class Herramienta {//aquí iran las herramientas que no encajen con las c
         return contraseniaEncriptada;        
     }     
     
+    public String desencriptarContrasenia(String encriptada){
+        String desencriptada=":3";
+        
+        return desencriptada;
+    }
+    
     public int extraerParteNumerica(int inicioExtraccion, String cadena){
         String parteExtraida = cadena.substring(inicioExtraccion);
         int parteNumerica=0;
@@ -49,8 +55,7 @@ public class Herramienta {//aquí iran las herramientas que no encajen con las c
             parteNumerica = Integer.parseInt(parteExtraida);
         }catch(NumberFormatException e){
             System.out.println("La parte extraida no puede ser convertida a un número");
-        }        
-        
+        }                
         return parteNumerica ;                  
     }
     
@@ -66,14 +71,40 @@ public class Herramienta {//aquí iran las herramientas que no encajen con las c
         return "";//aquí la página del laboratirista...
     }
     
-    public boolean[] darDiasTrabajoLaboratoristas(String[] diasTrabajo){
+    public String darPaginaAlAdministrador(String tipo){
+      if(tipo!=null){
+        switch(tipo){
+            case "Medico":
+                return "customizacionMedico.jsp";                        
+            case"Laboratorista":
+                 return "customizacionLaboratorista.jsp";                        
+            case"Examen":
+                 return "customizacionExamen.jsp";            
+            case"Consulta":
+                 return "customizacionConsulta.jsp";            
+            case"Paciente":
+                return "customizacionPaciente.jsp";                   
+        }        
+      }        
+            return "perfilAdministrador.jsp";
+    }
+    
+    /**
+     * Convierte el listado de días específicos en lso que trabaja
+     * en un horario con los días de labor, marcados...
+     * @param diasTrabajo
+     * @return
+     */
+    public boolean[] darDiasTrabajoLaboratoristas(String[] diasTrabajo){//este arreglo solo posee los días en los que trabaja... [el cual puede obtenerse desde el XML y de la interfaz... de la DB se obtienen los 7 días, marcando aquellos en los que se encuentra de turno...]
         boolean[] diasDeTRabajo = new boolean[diasTrabajo.length];
         String[] dias = {"domingo", "lunes", "martes", "miercoles", "jueves", "viernes", "sabado"};
         
-        for (int dia = 0; dia < diasTrabajo.length; dia++) {
-            if(diasTrabajo[dia].equalsIgnoreCase(dias[dia])){
-                diasDeTRabajo[dia]=false;
-            }
+        for (int diaARevisar = 0; diaARevisar < diasTrabajo.length; diaARevisar++) {
+            for (int dia = 0; dia < dias.length; dia++) {
+                if(diasTrabajo[diaARevisar].equalsIgnoreCase(dias[dia])){
+                    diasDeTRabajo[dia]=true;//pues todos los espacios están en false, por defecto...
+                }
+            }                    
         }        
         return diasDeTRabajo;
     }

@@ -110,7 +110,7 @@ public class ReporteAdministrador {
             ResultSet resultado = instruccion.executeQuery();
             
             while(resultado.next()){
-                reporte = new Reporte(resultado.getString(2), resultado.getString(3), resultado.getInt(1));                
+                reporte = new Reporte(resultado.getInt(2), resultado.getString(3), resultado.getInt(1));                
             }
         }catch(SQLException sqlE){
             System.out.println("surgió un error al buscar\ninformacion para el reporte de\ningregsos por medico -> "+ sqlE.getMessage());
@@ -126,12 +126,12 @@ public class ReporteAdministrador {
      * @param hasta
      * @return
      */
-    public Reporte examenesMasRequeridosPorMedicos(String codigoMedico, String desde, String hasta){//será empelado luego de haber seleccionadp  a un médico en particular...
+    public Reporte examenesMasRequeridosPorMedicos(int codigoMedico, String desde, String hasta){//será empelado luego de haber seleccionadp  a un médico en particular...
         String reportar ="SELECT COUNT(codigoExamen) AS total, nombre, FROM Solicitud_Examen INNER JOIN Examen ON Solicitud_Examen.codigoExamen =  Examen.codigo"
                 + "WHERE codigoMedico =  ? fecha BETWEEN ? AND ? GROUP BY codigoExamen ORDER BY total DESC LIMIT 3";
         
         try(PreparedStatement instruccion = conexion.prepareStatement(reportar)){/*indica aquí si está correcta*/
-            instruccion.setString(1, codigoMedico);
+            instruccion.setInt(1, codigoMedico);
             instruccion.setString(2, desde);
             instruccion.setString(3, hasta);
             

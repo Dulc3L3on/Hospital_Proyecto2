@@ -27,7 +27,7 @@ la DB, siempre y cuando esté vacía... esto por medio del if--%>
     <body><!--OJO: debes tener cuidado en no nombrar las variables del servlet desde dónde se redirigió a esta pág [con otro servlet definido...] pues si no sobreentenderá que te refieres a la que se encuentra en el lugar de donde salió para llegar aquí...-->    
         <%!ManejadorDB manejador = new ManejadorDB();//vamos a probar creando una nueva conexion... por el hecho de no saber si cuando se trata con sesiones, debe mantenerse la misma desde principio a fin o debe ser la misma hasta que se logue... esto lo digo porque me parece muy bien usar el patrón singleton
         ManejadorXML manejadorXML = new ManejadorXML();
-        VerificadorDB verificador = new VerificadorDB(manejador.darConexion());
+        VerificadorDB verificador = new VerificadorDB();
         ManejadorDeArchivos manejadorArchivos = new ManejadorDeArchivos();
         String nombreArchivoXML;
         boolean permisoCarga=false;

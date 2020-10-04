@@ -25,6 +25,7 @@ public class Creacion {//harán lo mismo puesto que la clase que requiere de una
 //          conexion = conexionDB;
 //      } 
       
+      //casi todos los métodos de aquí [si no es que todos, se emplean en cualquiere situación en la que se requiera crear lo que en su cuerpo forman...
       public Creacion(){
           conexion = ManejadorDB.darConexion();
       }//por el patrón SInglenton...
@@ -69,11 +70,11 @@ public class Creacion {//harán lo mismo puesto que la clase que requiere de una
         return true;
     }/*terminado*///es empleado e cualquier cotexto en el que se agregue una especialidad [crec o modif] es decir carga, o manualmente [por el admin]... 
     
-    public boolean crearEspecialidadMedico(boolean esCarga, String codigoMedico, int codigoEspecialidad){//como en este caso pasó por un proceso anteiror el codigo de especialidad para que le fuese enviado a este, no habrá problemas y menos con la interfaz, puesto que el número es daod por mi misma xD no por el usuario, así que no hay pierde xD
+    public boolean crearEspecialidadMedico(boolean esCarga, int codigoMedico, int codigoEspecialidad){//como en este caso pasó por un proceso anteiror el codigo de especialidad para que le fuese enviado a este, no habrá problemas y menos con la interfaz, puesto que el número es daod por mi misma xD no por el usuario, así que no hay pierde xD
         String crear = "INSERT INTO Especialidad_Medico (?,?)";
         
         try(PreparedStatement instruccion = conexion.prepareStatement(crear)){
-            instruccion.setString(1, codigoMedico);
+            instruccion.setInt(1, codigoMedico);
             instruccion.setInt(2, codigoEspecialidad);
             
             instruccion.executeUpdate();
@@ -86,12 +87,12 @@ public class Creacion {//harán lo mismo puesto que la clase que requiere de una
         return true;
     }/*terminado*/
     
-    public boolean crearHorarioLaboratorista(boolean esCarga, String codigoLaboratorista, String[] diasTrabajo){//puesto que así lo recibe la tabla,pero recuerda que cuando obtengas estos datos los converitrás al tipo que corresponden... boolean... creo xD
+    public boolean crearHorarioLaboratorista(boolean esCarga, int codigoLaboratorista, String[] diasTrabajo){//puesto que así lo recibe la tabla,pero recuerda que cuando obtengas estos datos los converitrás al tipo que corresponden... boolean... creo xD
         String crear ="INSERT INTO Horario_Laboratorista (?,?,?,?,?,?,?,?)";
         boolean[] horario = herramienta.darDiasTrabajoLaboratoristas(diasTrabajo);
         
         try(PreparedStatement instruccion = conexion.prepareStatement(crear)){
-            instruccion.setString(1, codigoLaboratorista);
+            instruccion.setInt(1, codigoLaboratorista);
             instruccion.setString(2, String.valueOf(horario[0]));//aquí hago las conversiones de forma directa puesto que yo se que no pueden fallar... a menos que surgiera un probelma con el sistema...
             instruccion.setString(3, String.valueOf(horario[1]));
             instruccion.setString(4, String.valueOf(horario[2]));
@@ -105,8 +106,7 @@ public class Creacion {//harán lo mismo puesto que la clase que requiere de una
         }catch(SQLException sqlE){
             System.out.println("error al crear el horario del laboratorista -> "+ sqlE.getMessage());
             return false;
-        }//Creoq que esta esCarga me será útil para saber si mando a agregar al listado de errores o no... aunque talvez tenga que seguir empleando esa ventana, en lugar de un solo JOP...
-        
+        }//Creoq que esta esCarga me será útil para saber si mando a agregar al listado de errores o no... aunque talvez tenga que seguir empleando esa ventana, en lugar de un solo JOP...        
         return true;
     }/*terminado*/
     
@@ -129,13 +129,13 @@ public class Creacion {//harán lo mismo puesto que la clase que requiere de una
         return false;
     }/*terminado*/
     
-     public int crearOrden(String codigoMedico, String path){//aún no he leído bien, pero supondremos que se guarda el path... [pero si realmente llega a ser así, entonces con la forma normal tendría que haber una variación puestoq ue asignará el doc en sí ó nada más tomar el path u no el doc como tal de la selección mencionada...si tienes que agregar el arch entoces creo que tocará buscarlo en la carpeta dada...
+    public int crearOrdenConMedico(int codigoMedico, String path){//aún no he leído bien, pero supondremos que se guarda el path... [pero si realmente llega a ser así, entonces con la forma normal tendría que haber una variación puestoq ue asignará el doc en sí ó nada más tomar el path u no el doc como tal de la selección mencionada...si tienes que agregar el arch entoces creo que tocará buscarlo en la carpeta dada...
          String crear ="INSERT INTO Orden (codigoMedico, pathOrden) VALUES (?,?)";//puesto que es autoincrementable...
          int idDelCreado=0;
          
         if(path!=null){
             try(PreparedStatement instruccion = conexion.prepareStatement(crear, Statement.RETURN_GENERATED_KEYS)){
-                 instruccion.setString(1, codigoMedico);
+                 instruccion.setInt(1, codigoMedico);
                  instruccion.setString(2, path);
              
                  instruccion.executeUpdate();
@@ -150,6 +150,27 @@ public class Creacion {//harán lo mismo puesto que la clase que requiere de una
         
         return idDelCreado;//ouesto que es una tabla "dependiente"[o interna, puesto que requiere de algo para ser generada...], la cual no requiere de cb en su actuar sin importar en qué situación se encuentre... entonces debe avisar que sucedió con su trabajo
      }
+    
+    public int crearOrdenSinMedico(String path){
+        String crear ="INSERT INTO Orden (pathOrden) VALUES (?)";//puesto que es autoincrementable...
+        int idDelCreado=0;
+         
+        if(path!=null){
+            try(PreparedStatement instruccion = conexion.prepareStatement(crear, Statement.RETURN_GENERATED_KEYS)){                 
+                 instruccion.setString(1, path);
+             
+                 instruccion.executeUpdate();
+                          
+                 ResultSet resultado=instruccion.getGeneratedKeys();
+                 idDelCreado=resultado.getInt(1);                        
+            }catch(SQLException sqlE){
+                //agregas el error al listado...
+                 return 0;
+            }                     
+        }//Esto lo hago por la carga de datos        
+        
+        return idDelCreado;//ouesto que es una tabla "dependiente"[o interna, puesto que requiere de algo para ser generada...], la cual no requiere de cb en su actuar sin importar en qué situación se encuentre... entonces debe avisar que sucedió con su trabajo
+    }
      
      public int crearResultadoConOrden(int codigoExamenAtendido, String path, int numeroOrden){//falta el path... y al mandarle el código del examen, se permite que puedan corregirse los errores manualmente, si es que este no va a ser generado por ti misma...
          String crear="INSERT INTO Resultado (codigoExamenAtendido, pathResultado, numeroOrden) VALUES (?,?,?)";         

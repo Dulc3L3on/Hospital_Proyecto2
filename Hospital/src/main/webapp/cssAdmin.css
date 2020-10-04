@@ -1,0 +1,67 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 3/10/2020, 19:39:46
+    Author     : phily
+*/
+
+#listaElementos{    
+    float: left;        
+    margin-left: 150px;
+    background-color: linen;
+    width: 350px;
+    height: 750px;
+    overflow: scroll;
+}
+
+#perfil{
+    float: right;      
+}
+    
+#opcionesEntidades{
+     padding-right: 100px;     
+}
+
+#contenedorInformacion{
+    margin-left: 150px;
+    margin-right: 150px;    
+    height: 800px;
+    width: 1000px;   
+}
+
+#datosUsuario{
+   padding-bottom: 15px;   
+   width: 235px;
+}
+
+#comandos{  
+    position: relative;
+    left: -350px;
+    top: 750px;
+    margin-left: 150px;        
+}
+
+#seleccion{
+    height: 55px;
+    width: 113px;     
+}
+
+#fotografiaUsuario{
+    position: relative;
+    right: 30px;
+    left: 300px;     
+}
+
+#listado{
+    position: relative;
+    right: 500px;    
+}
+
+#frameAdministrador{
+    height: 1000px;
+    width: 1500px;
+    border: none;
+}

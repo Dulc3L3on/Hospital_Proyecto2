@@ -36,11 +36,11 @@ public class IntegradorEntidades {
         try {                        
             switch(tipo){
                 case "Medico"://la misma estructura que será aplicada a médico aquí en esta clase, la misma tendrán las demás entidades y también los documentos...
-                    usuario = formarMedico(buscador.buscarDatosPersonales(resultado.getString(6)), buscadorMinucioso.buscarTitulos(resultado.getString(1)), resultado);//falta crear el método para crear los títulos... es de búsqueda general...
+                    usuario = formarMedico(buscador.buscarDatosPersonales(resultado.getString(6)), buscadorMinucioso.buscarTitulos(resultado.getInt(1)), resultado);//falta crear el método para crear los títulos... es de búsqueda general...
                     break;
                     
                 case "Laboratorista":
-                    usuario = formarLaboratorista(buscador.buscarDatosPersonales(resultado.getString(5)), buscadorMinucioso.buscarHorario(resultado.getString(1)), resultado);
+                    usuario = formarLaboratorista(buscador.buscarDatosPersonales(resultado.getString(5)), buscadorMinucioso.buscarHorario(resultado.getInt(1)), resultado);
                     break;
                     
                 case "Paciente":
@@ -62,7 +62,7 @@ public class IntegradorEntidades {
         
         if(datosPersonales!=null && titulos!=null){
             try{
-                medico = new Medico(resultado.getString(1), resultado.getString(2), resultado.getString(3), 
+                medico = new Medico(resultado.getInt(1), resultado.getString(2), resultado.getString(3), 
                       resultado.getInt(4), resultado.getInt(5), datosPersonales, resultado.getDate(7), titulos);
             }catch(SQLException sqlE){  
                 System.out.println("surgió un error al formar al médico -> "+ sqlE.getMessage());
@@ -77,7 +77,7 @@ public class IntegradorEntidades {
         
         if(datosPersonales!=null && horario!=null){
             try{
-                laboratorista = new Laboratorista(resultado.getString(1), resultado.getString(2), resultado.getString(3), resultado.getInt(4), resultado.getDate(5), datosPersonales, horario);
+                laboratorista = new Laboratorista(resultado.getInt(1), resultado.getString(2), resultado.getString(3), resultado.getInt(4), resultado.getDate(5), datosPersonales, horario);
             }catch(SQLException sqlE){
                 System.out.println("surió un error al formar al laboratorista -> " + sqlE.getMessage());
                 laboratorista= null;
@@ -105,7 +105,7 @@ public class IntegradorEntidades {
        
        if(datosPersonales!=null){
            try{
-               administrador = new Administrador(resultado.getString(1), resultado.getString(2), datosPersonales);
+               administrador = new Administrador(resultado.getInt(1), resultado.getString(2), datosPersonales);
            }catch(SQLException sqlE){
                System.out.println("surgió un error al formar al administrador -> "+ sqlE.getMessage());//aunque este método creo que no se empleará... ya que no te piden crear a un administrador... si te da timepo lo haces...
                administrador = null;
