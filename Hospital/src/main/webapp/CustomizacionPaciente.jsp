@@ -1,18 +1,19 @@
 <%-- 
-    Document   : adminLaboratorista
-    Created on : 3/10/2020, 23:26:13
+    Document   : adminPaciente
+    Created on : 3/10/2020, 23:40:40
     Author     : phily
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
-      <head>
+        <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <!--no le pongo título, pues es una página interna...-->
         <link rel="stylesheet" href="cssAdmin.css">
     </head>
-    <body>      
+    <body>   
+       
         <div>
             <div id="listaElementos"><!--aquí le definirás su ancho, puesto que su largo dependerá del iframe..., además del colorcito xD o al menos el borde xD-->
                 <%!int numero=7;%>
@@ -23,7 +24,7 @@
                     <%numero--;
                 }%>
             </div>    
-            <form method="POST" action="dashboardAdminMedico.jsp" id="comandos">
+            <form method="POST" action="customizacionPaciente.jsp" id="comandos">
                 <input type="submit" id="seleccion" name="seleccion" value="MODIFICAR">
                 <input type="submit" id="seleccion" name="seleccion" value="CREAR">
                 <input type="submit" id="seleccion" name="seleccion" value="ELIMINAR"><!--dependiendo del valor que tenga la petición de estos btn, se hará null las variables que obtienen los datos del médico del arreglo obtenido... ó se mandará a guaradar en la DB...-->
@@ -34,7 +35,7 @@
         
         <div id="contenedorInformacion">
             <form method="POST" action="dashboardAdminMedico.jsp">
-                <img src="img/pseudoLaboraatorista.png" id="fotografiaUsuario" alt="iconoMedico">
+                <img src="img/paciente.png" id="fotografiaUsuario" alt="iconoMedico">
                 <center>
                     <table cellspacing="25">
                         <tr>
@@ -47,35 +48,39 @@
                         </tr>
                         <tr>
                             <th>
-                                <input type="number" id="datosUsuario" name="informacion" placeholder="#registroMS" required><br/>                             
+                                <input type="number" id="datosUsuario" name="informacion" placeholder="DPI" maxlength="13" required><br/>                             
                             </th>
                             <th>
-                                <input type="number" id="datosUsuario" name="informacion" placeholder="DPI" maxlength="13"required><br/> 
+                                <input type="number" id="datosUsuario" name="informacion" placeholder="telefono" maxlength="8"required><br/> 
                             </th>
                         </tr>
                         <tr>
                             <th>
-                                 <input type="number" id="datosUsuario" name="informacion" placeholder="telefono" maxlength="8" required><br/> 
+                                 <input type="text" id="datosUsuario" name="informacion" placeholder="sexo" required><br/><!--o podrías pasar a estar en el lugar de las especialidades/horario...-->
                             </th>
                             <th>
-                                 <input type="text" id="datosUsuario" name="informacion" placeholder="fechaActual" required><br/> <!--aquí sería unvalue, que obtendrá el valor de la var respectiva, quien a su vez obtiene los datos del melemento [médico] seleccionado...-->
+                                 <input type="date" id="datosUsuario" name="informacion" placeholder="birth" required><br/> <!--aquí sería unvalue, que obtendrá el valor de la var respectiva, quien a su vez obtiene los datos del melemento [médico] seleccionado...-->
                             </th>
                         </tr>         
                         <tr>
                             <th>
                                  <input type="email" id="datosUsuario" name="informacion" placeholder="correo" required><br/> 
-                            </th>                            
+                            </th>   
+                             <th>
+                                 <input type="number" id="datosUsuario" name="informacion" placeholder="peso" required><br/> <!--aquí sería unvalue, que obtendrá el valor de la var respectiva, quien a su vez obtiene los datos del melemento [médico] seleccionado...-->
+                            </th>
                         </tr>              
                     </table>
-                    <div id="listado">
-                        <input type="radio" value="domingo">
-                        <input type="radio" value="lunes"><br/>
-                        <input type="radio" value="martes">
-                        <input type="radio" value="miercoles"><br/>
-                        <input type="radio" value="jueves">
-                        <input type="radio" value="viernes"><br/>
-                        <input type="radio" value="sabado">
-                    </div>                    
+                     <select id="listado" name="especialidades"><!--aún no se si funcione el hecho de nombrarlo igual a la info o mejor que tenga uno propio... mejor la 2da op XD facilita más las cosas xD-->                      
+                        <option name="A+">A+</option>
+                        <option name="A-">A-</option>
+                        <option name="B+">B+</option>
+                        <option name="B-">B-</option>
+                        <option name="AB+">AB+</option>
+                        <option name="AB-">AB-</option>
+                        <option name="O+">O+</option>
+                        <option name="O-">O-</option>                      
+                    </select><br/>                                                                
                     <input type="submit" name="aceptar" value="ACEPTAR">
                 </center>                
             </form>            

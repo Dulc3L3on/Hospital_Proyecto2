@@ -45,19 +45,22 @@ public class Modificacion {//creo que los métodos solo serán específicos [es 
     public boolean modificarDatosPersonales(int codigo, String correo, String contrasenia, String numeroTelefono, String DPI){
         String modificar ="UPDATE Datos_Personales SET correo = ? contrasenia = ? telefono = ? DPI = ? WHERE codigo = ?";
         
-        try(PreparedStatement instruccion = conexion.prepareStatement(modificar)){
-            instruccion.setString(1, correo);
-            instruccion.setString(2, contrasenia);
-            instruccion.setString(3, numeroTelefono);
-            instruccion.setString(4, DPI);
-            instruccion.setInt(6, codigo);//Este código es el de los datos personales, no lo vayas a aolvidar...
+        if(herramienta.encriptarContrasenia(contrasenia)!=null){
+            try(PreparedStatement instruccion = conexion.prepareStatement(modificar)){
+                instruccion.setString(1, correo);
+                instruccion.setString(2, contrasenia);
+                instruccion.setString(3, numeroTelefono);
+                instruccion.setString(4, DPI);
+                instruccion.setInt(6, codigo);//Este código es el de los datos personales, no lo vayas a aolvidar...
             
-            instruccion.executeUpdate();            
-        }catch(SQLException sqlE){
-            System.out.println("surgió un error al modificar los datos personales -> "+ sqlE.getMessage());
-            return false;
-        }
-        return true;
+                instruccion.executeUpdate();            
+                return true;
+            }catch(SQLException sqlE){
+                System.out.println("surgió un error al modificar los datos personales -> "+ sqlE.getMessage());
+                return false;
+            }
+        }                
+        return false;
     }/*terminado*///será llamado sismpre que se modifiquen los datos de un médico, ya sea que cb o no los atributos que esta tabla contiene...
     
     /*RECUERDA: que recibe los datos de un onjeto MEDICO [1 de un arr o 1 obj en particular debido a la sesion...*/
@@ -83,17 +86,20 @@ public class Modificacion {//creo que los métodos solo serán específicos [es 
         return true;        
     }/*terminado*/   
     
-    public void modificarListadoTitulos(int codigoMedico, ListaEnlazada<String> listadotitulosAntiguos, String[] listadoTitulosReciente){//no retornará nada puesto que el método para crear la EspMed, se encarga de mandar a decir esto y de arreglar dicho problema...
-        if(listadoTitulosReciente.length> listadotitulosAntiguos.darTamanio()){
-            //se llama al método para crear el título en la tabla espMed
-            int tamanioOriginal = listadotitulosAntiguos.darTamanio();
-            for (int especialidadNueva = tamanioOriginal; especialidadNueva < listadoTitulosReciente.length; especialidadNueva++) {                
-                if(creador.crearEspecialidadMedico(false, codigoMedico, buscadorMinucioso.buscarCodigoTitulo(listadoTitulosReciente[especialidadNueva]))){//al parecer si merecía se OBJETOS lso títulos xD
-                    listadotitulosAntiguos.anadirAlFinal(listadoTitulosReciente[especialidadNueva]);
-                }//fin del if donde se agerga a la tabla de espMed al médico correspondiente y se agrega de forma local a menos que la agergación a la tabla falle...
-            }//de esta manera agrego los títulos a espMed...                                   
-        }//no olvides que este listado "recientes" lo obtnedrás no del cbBx dónde seleccionarn la especialidad a agegar sino de la línea no editable [o listado... ya veremos], que se separará por , entonces al app el split se obtiene el arr y por ello no hay nec de hacer una revisión...
-    }/*terminado :) :3 xD*///por el if que dentro tiene, puede ser llamado cada vez en el código en el que debe entregar lo que le han solicitado...
+    public boolean modificarTitulario(int codigoMedico, ListaEnlazada<String> titulosAntiguos, String[] nuevosTitulos){
+        boolean procesoExitoso=true;
+        
+        if(nuevosTitulos!=null){//si es null es porque no seleccionó nada y por ello el proceso salió bien :v xD         
+            for (int tituloActual = 0; tituloActual < nuevosTitulos.length; tituloActual++) {
+                if(creador.crearEspecialidadMedico(false, codigoMedico, buscadorMinucioso.buscarCodigoTitulo(nuevosTitulos[tituloActual]))){
+                    titulosAntiguos.anadirAlFinal(nuevosTitulos[tituloActual]);
+                }else{
+                    procesoExitoso=false;
+                }            
+            }            
+        }        
+        return procesoExitoso;
+    }/*terminado*///Es empleado cuando los títulso solo peuden ser añadidos de 1 en 1...       
     
     //empleado por el ADMIN y el PACIENTE
     public boolean modificarPaciente(int codigoPaciente, String nombre, String sexo, Date birth, String peso, String tipoSangre){

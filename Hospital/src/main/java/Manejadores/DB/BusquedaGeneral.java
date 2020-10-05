@@ -5,15 +5,11 @@
  */
 package Manejadores.DB;
 
-import Documentacion.Consulta;
 import Documentacion.Documento;
 import Documentacion.Estructura;
-import Documentacion.Examen;
-import Entidades.Laboratorista;
-import Entidades.Medico;
-import Entidades.Paciente;
 import Entidades.Usuario;
 import Extras.DatosPersonales;
+import Kit.ListaEnlazada;
 import Manejadores.DB.Entidades.IntegradorEntidades;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -31,11 +27,13 @@ public class BusquedaGeneral {
     Documento[] documentos;
     Estructura[] estructuras;
     
-    IntegradorEntidades integrador = new IntegradorEntidades();
+    IntegradorEntidades integrador;
     
     //estos métodos son útiles sin importar el número de coincidencias que vayan a hallarse... puesto que si hubiera 1, entonces sería un arreglo de 1 coincidencia :v
     public BusquedaGeneral(){
         conexion = ManejadorDB.darConexion();
+        integrador =new IntegradorEntidades();
+        integrador.establecerBuscadorGeneral(this);
     }
     
     public DatosPersonales buscarDatosPersonales(String codigoDatos){//esto es para todos los usuarios menos los médicos...
@@ -48,11 +46,28 @@ public class BusquedaGeneral {
             datosPersonales = new DatosPersonales(resultado.getString(2), resultado.getString(3), resultado.getString(4), resultado.getString(5));                        
         }catch(SQLException e){
             datosPersonales = null;
-            System.out.println("Surgió un problema al buscar los datos personales");
+            System.out.println("Surgió un problema al buscar los datos personales"+"/n"+e.getMessage());
         }
         
         return datosPersonales;       
     }//esto es para una persona en específico... entonces no puede ser app a la búsuqeda general sino a la especíica...
+    
+    public ListaEnlazada<String> darEspecialidades(){
+        String buscar="SELECT (nombre) FROM Especialidad";
+        ListaEnlazada<String> especialidades = new ListaEnlazada();
+    
+        try(PreparedStatement instruccion = conexion.prepareStatement(buscar)){
+            ResultSet resultado = instruccion.executeQuery();                                    
+            
+            while(resultado.next()){
+                especialidades.anadirAlFinal(resultado.getString(1));
+            }
+            
+        }catch(SQLException e){
+            System.out.println("surgió un error al recuperar las especialidades"+"/n"+e.getMessage());                        
+        }        
+        return especialidades;//De esta manera, no hanrá problema cuando no tenga nada, puesto que dará un valor 0...
+    }
     
     /**
      *Método empleado por ADMINISTRADOR para realizar las búsquedas
@@ -70,7 +85,7 @@ public class BusquedaGeneral {
             ResultSet resultado = instruccion.executeQuery();
             resultado.last();
     
-            usuarios = new Usuario[resultado.getRow()];
+            usuarios = new Usuario[resultado.getRow()];//creo que cuando no tiene registros devulve -1... eso quiere decir que se provocaría un indexOutBoudException...
             resultado.first();
             
             for (int numero = 0; numero < usuarios.length; numero++) {
@@ -79,7 +94,7 @@ public class BusquedaGeneral {
             }            
             
         }catch(SQLException e){
-            System.out.println("surgio un error al buscar al "+ buscado);
+            System.out.println("surgio un error al buscar al "+ buscado+"\n"+e.getMessage());
         }             
         
         return usuarios;
@@ -104,12 +119,10 @@ public class BusquedaGeneral {
             for (int numero = 0; numero < estructuras.length; numero++) {
                 estructuras[numero] = integrador.formarEstructura(resultado, tipoEstructura);//a pesar de incluir a los documentos, aquí solo serán tomados los usuarios...
                 resultado.next();
-            }            
-            
+            }                      
         }catch(SQLException e){
-            System.out.println("surgio un error al buscar al "+ tipoEstructura);
-        }             
-        
+            System.out.println("surgio un error al buscar al "+ tipoEstructura+"/n"+e.getMessage());
+        }                   
          return estructuras;
     }
     

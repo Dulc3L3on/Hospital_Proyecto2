@@ -17,27 +17,25 @@ import java.text.SimpleDateFormat;
  */
 public class Herramienta {//aquí iran las herramientas que no encajen con las clases, y sean necesarias...
     int[] ultimosIDCreados;//al iniciar el programa este obtendrá sus valores por medio del método de manejadorArch con el cual se leen las líneas de los ID... para la primera ejecució, solo será necesario para ExAt, puesto que los demás son brindados por el XML...
-    
-           
+               
     public String encriptarContrasenia(String contrasenia){
-        String contraseniaEncriptada="";
+        String contraseniaEncriptada=null;
         
         try {
             MessageDigest digestor = MessageDigest.getInstance("MD5");
             byte[] bitesEncriptados = digestor.digest(contrasenia.getBytes());
             BigInteger superEntero = new BigInteger(1, bitesEncriptados);//hemos convertido a un hash MD5 :3 xD
             
-            String cadenaEncriptada = superEntero.toString(16);
+            contraseniaEncriptada = superEntero.toString(16);
             
-            while(cadenaEncriptada.length()<32){//Se rellenan espacios faltantes :0 xD
-                cadenaEncriptada = "0"+cadenaEncriptada;
+            while(contraseniaEncriptada.length()<32){//Se rellenan espacios faltantes :0 xD
+                contraseniaEncriptada = "0"+contraseniaEncriptada;
             }                       
         } catch (NoSuchAlgorithmException ex) {
             System.out.println("surió un error con el algoritmo de encriptacion");
         }catch(Exception e){
             System.out.println("surgio un error al encriptar la contrasenia");
-        }
-        
+        }        
         return contraseniaEncriptada;        
     }     
     
@@ -45,7 +43,7 @@ public class Herramienta {//aquí iran las herramientas que no encajen con las c
         String desencriptada=":3";
         
         return desencriptada;
-    }
+    }        
     
     public int extraerParteNumerica(int inicioExtraccion, String cadena){
         String parteExtraida = cadena.substring(inicioExtraccion);
@@ -65,7 +63,7 @@ public class Herramienta {//aquí iran las herramientas que no encajen con las c
         }if(tipoUsuario.equals("Medico")){
             return "";
         }if(tipoUsuario.equals("Administrador")){
-            return "";
+            return "HomeAdministrador.jsp";
         }
         
         return "";//aquí la página del laboratirista...
@@ -75,18 +73,30 @@ public class Herramienta {//aquí iran las herramientas que no encajen con las c
       if(tipo!=null){
         switch(tipo){
             case "Medico":
-                return "customizacionMedico.jsp";                        
+                return "CustomizacionMedico.jsp";                        
             case"Laboratorista":
-                 return "customizacionLaboratorista.jsp";                        
+                 return "CustomizacionLaboratorista.jsp";                        
             case"Examen":
-                 return "customizacionExamen.jsp";            
+                 return "CustomizacionExamen.jsp";            
             case"Consulta":
-                 return "customizacionConsulta.jsp";            
+                 return "CustomizacionConsulta.jsp";            
             case"Paciente":
-                return "customizacionPaciente.jsp";                   
+                return "CustomizacionPaciente.jsp";                   
         }        
       }        
             return "perfilAdministrador.jsp";
+    }
+    
+    public boolean esRedundante(ListaEnlazada<String> listaAComparar, String comparado){
+        Nodo<String> nodoAuxiliar = listaAComparar.obtnerPrimerNodo();
+        
+        for (int elementoActual = 1; elementoActual < listaAComparar.darTamanio(); elementoActual++) {
+            if(comparado.equals(nodoAuxiliar.contenido)){
+                return true;
+            }
+            nodoAuxiliar=nodoAuxiliar.nodoSiguiente;
+        }        
+        return false;
     }
     
     /**

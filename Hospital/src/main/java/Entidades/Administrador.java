@@ -6,7 +6,13 @@
 package Entidades;
 
 import Extras.DatosPersonales;
+import Kit.ListaEnlazada;
 import Manejadores.DB.BusquedaGeneral;
+import Manejadores.DB.Creacion;
+import Manejadores.DB.CreacionAdministrada;
+import Manejadores.DB.Modificacion;
+import java.sql.Date;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -14,6 +20,9 @@ import Manejadores.DB.BusquedaGeneral;
  */
 public class Administrador extends Usuario{            
     BusquedaGeneral buscador = new BusquedaGeneral();
+    Modificacion modificador = new Modificacion();
+    CreacionAdministrada creacion = new CreacionAdministrada();
+    Creacion creador = new Creacion();
     
     public Administrador(int elCodigo, String elNombre, DatosPersonales datosPersonales){
         super(elCodigo, elNombre, datosPersonales);                
@@ -59,27 +68,43 @@ public class Administrador extends Usuario{
 //        
 //        
 //    }//esto deplano que mañana, porque será necesario tener la interfaz para saber al final como se hará para manejar la infor dada...
+
     
-    /**
-     *Método llamado al ser seleccionada una opcion del grupo de entidades
-     *de los radioBUttons
-     * @param tipoAModificar
-     */
-    public void modificarEntidad(String tipoAModificar){
-        switch(tipoAModificar){
-            case "Medico":
-            break;
-            
-            case "Laboratorista":
-            break;
-            
-            case "Paciente":
-            break;
-            
-            case "Administrador":
-            break;
-        }//igial mañana hay que ver esto...
+    public void modificarMedico(int codigo, String nombre, String contrasenia, String numeroColegiado, String DPI, 
+      String telefono, String correo, Date fechaIncorporacion, int horaInicio, int horaFin, ListaEnlazada<String> titulosAntiguos, String[] nuevosTitulos){//mando el valor como es, puesto que no hay pierde... ya que cada cajita tiene sus especificaciones
+    
+        if(!modificador.modificarDatosPersonales(codigo, correo, contrasenia, telefono, DPI) || 
+          !modificador.modificarMedico(codigo, nombre, numeroColegiado, horaInicio, horaFin, fechaIncorporacion)
+          || !modificador.modificarTitulario(codigo, titulosAntiguos, nuevosTitulos)){
+            JOptionPane.showMessageDialog(null,"", "Sucedió un error en la creacion\nbusque y revise la\ninformacion guardada", JOptionPane.ERROR_MESSAGE);
+        }       
+    }//solo falta revisar lo de las sesiones para reemplazar lo que está en el JSP...
+    
+    public void crearMedico(String nombre, String colegiado, String horaInicio, String horaFin, String fechaIncorporacion, String correo, String contrasenia, String telefono, String DPI, String[] titulos){
+        int codigoMedico=creacion.crearMedico(nombre, colegiado, horaInicio, horaFin, horaInicio, correo, contrasenia, telefono, DPI);
         
-    }//a mi parrecer este método deberia estar en modificaciones... aśi como con la búsuqueda...
+        if(codigoMedico!=0){
+            creacion.crearTitulos(codigoMedico, titulos);
+        }else{
+            JOptionPane.showMessageDialog(null, "", "Surgió un problema en la\ncreación del médico\nrevise los datos", JOptionPane.ERROR_MESSAGE);
+        }
+    }//solo falta llevarlo a la interfaz...
     
+    public void modificarLaboratorista(int codigo, String correo, String contrasenia, String telefono, String DPI, String nombreLaboratorista, String registroMS,
+      int codigoExamen, Date fechaIncorporacion, boolean[] diasTrabajo){
+        if(modificador.modificarDatosPersonales(codigo, correo, contrasenia, telefono, DPI) ||
+            modificador.modificarLaboratorista(codigoExamen, nombreLaboratorista, registroMS, codigoExamen, fechaIncorporacion)
+            || modificador.modificarHorarioLaboratorista(codigoExamen, diasTrabajo)){
+        
+            JOptionPane.showMessageDialog(null, "", "sucedio un error en la modificacion\ndel laboratorista corrobore los\ndatos guardados", codigoExamen);
+        }        
+    }
+    
+    public void crearLaboratorista(String nombre, String registroMS, String codigoExamen, String fechaIncorporacion, String correo, String contrasenia, String telefono, String DPI, String[] diasTrabajo){
+        int codigoLaboratorista=creacion.crearLaboratorista(nombre, registroMS, telefono, telefono, correo, contrasenia, telefono, DPI, diasTrabajo);
+            
+        if(codigoLaboratorista!=0){
+            creador.crearHorarioLaboratorista(false, codigoLaboratorista, diasTrabajo);
+        }    
+    }//de igual forma a estos 2 solo les hace falta ser incorporados en la interfaz...
 }

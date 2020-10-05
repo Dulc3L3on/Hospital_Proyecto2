@@ -34,4 +34,21 @@ public class Examen extends Estructura{
     public void redefinirExtension(String nuevaExtension){
         tipoExtensionResultado = nuevaExtension;
     }
+    
+    public int darCodigo(){
+        return codigo;
+    }
+    
+    public boolean darRequerimiento(){
+        return requiereOrden;
+    }
+    
+    public String darDescripcion(){
+        return descripcion;
+    }
+    
+    public String darExtensionResultado(){
+        return tipoExtensionResultado;
+    }
+    
 }

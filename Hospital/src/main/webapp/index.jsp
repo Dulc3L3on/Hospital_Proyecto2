@@ -4,6 +4,7 @@
     Author     : phily
 --%>
 
+<%@page import="Manejadores.DB.BusquedaEspecifica"%>
 <%@page import="java.time.LocalDate"%>
 <%@page import="Manejadores.DB.Registro"%>
 <%@page import="Manejadores.DB.Sesion"%>
@@ -20,35 +21,37 @@
         <title>Hospital Home</title>
         <%! ManejadorDB manejadorDB  = new ManejadorDB();%>        
         <%! VerificadorDB verificador = new VerificadorDB();%>
-        <%! Herramienta herramienta = new Herramienta();%>                     
+        <%! Registro registrador = new Registro();%>
+        <%! Herramienta herramienta = new Herramienta();%>   
+        <%! BusquedaEspecifica buscadorMinucioso = new BusquedaEspecifica();%>
         <%!LocalDate hoy = LocalDate.now();%>
     </head>
-    <body>      
+    <body>          
           <%if(verificador.debeLlenarse()){       
                 //request.setAttribute("conexion", manejadorDB.darConexion());                
                 request.getRequestDispatcher("cargaDatos.jsp").forward(request, response);
                 //response.sendRedirect("cargaDatos.jsp");                
-          }else{                    
+            }else if(request.getParameter("aceptacion")!=null){                    
                 if(request.getParameter("aceptacion").equals("INGRESAR") && verificador.verificarLogueo(request.getParameter("tipoUsuario"), request.getParameterValues("logueo"))!=null){
-                    //se manda el objeto tipo usuario generado...
-                    //request.setAttribute("conexion", manejadorDB.darConexion());//esto no porque al final de cuentas se empleará el patron singlenton xD
+                    int codigoEntidad= buscadorMinucioso.buscarIDdelLogueado(request.getParameter("tipoUsuario"), request.getParameter("contrasenia"), request.getParameter("correo"));
                     
-                    //request.getRequestDispatcher(herramienta.darPaginaPerfil(request.getParameter("tipoUsuario"))).forward(request, response);//aquí le envío las mismísimas var de este obj preg/resp... eso quiere decir que no podré hacer ref a lo que hagan en la parte a la que envío la info...?                    
-                    //lo comenté puesto que estoy estbleciendo atributos a enviar... por lo tanto encaja a la perfección un dispatcher y forward...
-                    //response.sendRedirect(herramienta.darPaginaPerfil(request.getParameter("tipoUsuario")));//se obtiene el usario del cbBox... que tiene por default paciente...                   
-          %>
-         <%}if(request.getParameter("aceptacion").equals("REGISTRAR") && verificador.verificarRegistro("Paciente", request.getParameterValues("registro"))){%><%--lo mismo digo aquí...--%>                                     
-                   <!--se manda a llamar al método para hacer el registro-->                                     
-         <%}%>
-            <form method="POST" action="index.jsp">
+                    if(codigoEntidad!=0){
+                        request.setAttribute("id", request.getParameter("logueo"));
+                        response.sendRedirect(herramienta.darPaginaPerfil(request.getParameter("tipoUsuario")));
+                    }%><!--y así se hace un logueo xD-->
+                    <%}if(request.getParameter("aceptacion").equals("REGISTRAR") && !registrador.registrarPaciente(request.getParameterValues("registro"))){%><%--lo mismo digo aquí...--%>                                     
+                   <!--se manda a avisar sobre la falla-->                                     
+               
+                <%}%>
+            <form method="POST" action="index">
                     <select name="tipoUsuario">
                         <option name="Paciente">Paciente</option>
                         <option name="Administrador">Administrador</option>
                         <option name="Medico">Medico</option>
                         <option name="Laboratorista">Laboratorista</option>                        
                     </select>
-                    <input type="text" name="logueo" placeholder="email" required><%--vamos a probar agrupando los btn... no creo que de problemas puesto que todo lo trata como str... sino pues vuelve a separarlos...--%>
-                    <input type="password" name="logueo" placeholder="password" required>
+                    <input type="email" name="correo" placeholder="email" required><%--vamos a probar agrupando los btn... no creo que de problemas puesto que todo lo trata como str... sino pues vuelve a separarlos...--%>
+                    <input type="password" name="contrasenia" placeholder="password" required>
                     <input type="submit" name="aceptacion" value="INGRESAR">                      
                         <%--no sería necesario un script... pues podrías revisar con un mpetodo de verficación para el logueo si sale bien, redireccionar con el response y si no regresar a la página y mostrar un msje indicando que no ingresó correctamente los datos...--%>
                     </br>

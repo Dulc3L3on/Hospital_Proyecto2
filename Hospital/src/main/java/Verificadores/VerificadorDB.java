@@ -105,18 +105,7 @@ public class VerificadorDB {
     return null;
     }
     
-    public boolean verificarRegistro(String tipoUsuario, String[] datosRegistro) {       
-        if(tipoUsuario.equals("Paciente")){
-            return registrador.registrarPaciente(datosRegistro);//con tal de no atiborrar al método de registro con el switch, mejor que converga aquí xD
-        }if(tipoUsuario.equals("Medico")){
-            return registrador.registrarMedico();
-        }if(tipoUsuario.equals("Laboratorista")){
-            return registrador.registrarLaboratorista(datosRegistro);
-        }
-        
-        return registrador.registrarAdministrador();                        
-    }//Recuerda que aún andas pensando si pueden ser 1 método junto con el de carga... [de todos modos, no se entera de donde recibe su información, el sólo sabe que la tiene o no...
-    
+
     
   
     

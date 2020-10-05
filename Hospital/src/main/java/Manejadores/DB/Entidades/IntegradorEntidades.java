@@ -27,9 +27,13 @@ import java.sql.SQLException;
  * @author phily
  */
 public class IntegradorEntidades {
-    BusquedaGeneral buscador = new BusquedaGeneral();
+    BusquedaGeneral buscador;
     BusquedaEspecifica buscadorMinucioso = new BusquedaEspecifica();
         
+    public void establecerBuscadorGeneral(BusquedaGeneral generalizador){
+        buscador = generalizador;
+    }
+    
       public Usuario formarEntidad(ResultSet resultado, String tipo){ 
         Usuario usuario=null;
           

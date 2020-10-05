@@ -29,10 +29,10 @@ and open the template in the editor.
     margin-left: 150px;
     margin-right: 150px;    
     height: 800px;
-    width: 1000px;   
+    width: 1500px;   
 }
 
-#datosUsuario{
+#datos{
    padding-bottom: 15px;   
    width: 235px;
 }
@@ -49,19 +49,19 @@ and open the template in the editor.
     width: 113px;     
 }
 
-#fotografiaUsuario{
+#fotografia{
     position: relative;
     right: 30px;
     left: 300px;     
 }
 
 #listado{
-    position: relative;
-    right: 500px;    
+/*    position: relative;
+    right: 500px;    */
 }
 
 #frameAdministrador{
     height: 1000px;
-    width: 1500px;
+    width: 1800px;
     border: none;
 }

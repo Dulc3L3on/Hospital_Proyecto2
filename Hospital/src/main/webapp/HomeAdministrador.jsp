@@ -15,7 +15,8 @@
         <%!Herramienta herramienta = new Herramienta();
            String pagina;%>
     </head>        
-    <body>         
+    <body>        
+   
         <%pagina = herramienta.darPaginaAlAdministrador(request.getParameter("opcion"));%>     
         <form method="POST" accion="HomeAdministrador">
             <input type="submit" id="opcionesEntidades" name="opcion" value="Medico" >

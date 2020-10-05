@@ -19,6 +19,25 @@ import java.sql.SQLException;
 public class BusquedaEspecifica {
     Connection conexion = ManejadorDB.darConexion();         
     
+    public int buscarIDdelLogueado(String entidad, String contrasenia, String correo){//Aquí ya se le habrá pasado la cencriptación de la contrasenia ingresada...
+        int codigo=0;        
+        
+        if(entidad!=null){
+            String buscar ="SELECT codigo FROM "+ entidad+"WHERE datos_Personales = (SELECT codigo FROM "
+            + "Datos_Personales WHERE contrasenia = ? AND correo = ?)";           
+        
+            try(PreparedStatement instruccion = conexion.prepareStatement(buscar)){
+                instruccion.setString(1, contrasenia);
+                instruccion.setString(2, correo);
+            
+            }catch(SQLException sqlE){
+                System.out.println("surgió un error al\ncorroborar identificador\ndel solicitante\n"+sqlE.getMessage());
+                codigo=0;
+            }
+        }        
+        return codigo;
+    }
+    
     public boolean[] buscarHorario(int codigoLaboratorista){
         String buscar="SELECT * FROM Horario_Laboratorista WHERE codigoLaboratorista = ?";
         boolean[] horario =null;
@@ -80,6 +99,25 @@ public class BusquedaEspecifica {
             codigoTitulo=0;//aqunque creo que cuando llegara a fallar, la variable se quedaría con un valor 0, ya sea porque no le llegó nada o porqu eel método mismo devulve 0 cuando falla...
         }
         return codigoTitulo;
+    }
+    
+    public String buscarNombreExamen(int codigo){        
+        String buscar ="SELECT (nombre) FROM Examen WHERE codigo = ?";
+        String nombre=null;
+        
+        try(PreparedStatement instruccion = conexion.prepareStatement(buscar)){
+            instruccion.setInt(1, codigo);
+            
+            ResultSet resultado = instruccion.executeQuery();
+            
+            while(resultado.next()){
+                nombre = resultado.getString(1);//como se supone no habrán más..
+            }                        
+        }catch(SQLException sqlE){
+            System.out.println("surgió un error al\nrecuperar el nombre del examen\n"+sqlE.getMessage());
+            nombre=null;
+        }
+        return nombre;
     }
     
 }

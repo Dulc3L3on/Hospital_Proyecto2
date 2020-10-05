@@ -12,10 +12,12 @@
         <title>JSP Page</title>
     </head>
     <body>
+        
         <center>  
         <h1>BIENVENIDO :3</h1><br/>
         <h4>CODIGO: </h4><br/>        
-             <form method="POST" action="perfilAdministrador.jsp">
+       
+             <form method="POST" action="perfilAdministrador">
                 <img src="img/administrador.png" id="fotografiaUsuario" alt="iconoMedico">
             
                     <table cellspacing="25">
@@ -34,7 +36,8 @@
                                 <input type="number" id="datosUsuario" name="informacion" placeholder="DPI" maxlength="13"required><br/> 
                             </th>                            
                     </table>
-                    <input type="submit" name="aceptar" value="ACEPTAR">               
+                    <input type="submit" name="accion" value="ACEPTAR">    
+                    <input type="submit" name="accion" value="CERRAR SESION">
              </form>
          </center>
     </body>

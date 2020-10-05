@@ -40,7 +40,7 @@ public class Medico extends Usuario{
     
     public void reestablecerDatosPersonales(){
     
-    }            
+    }//pero estos son para cuando él es el de la sesión...        
     
     @Override
     public void registrarse (){//vamos a ver si no desaparece, por el proceso que tienes actualmetne para exe dicha axn...
@@ -130,17 +130,8 @@ public class Medico extends Usuario{
         return numeroColegiado;
     }
     
-    public String darTitulos(){//puesto que cada vez que se los pidan será desde la interfaz... entonces deberá de entregarse tal y como lo maneja ella... String...
-        String cadenaTitulos=null;
-        
-        Nodo<String> nodoAuxiliar = titulos.obtnerPrimerNodo();
-        for (int tituloActual = 1; tituloActual <= titulos.darTamanio(); tituloActual++) {
-            cadenaTitulos = nodoAuxiliar.contenido;
-            
-            nodoAuxiliar= nodoAuxiliar.nodoSiguiente;
-        }
-        
-        return cadenaTitulos;
+    public ListaEnlazada<String> darTitulos(){//puesto que cada vez que se los pidan será desde la interfaz... entonces deberá de entregarse tal y como lo maneja ella... String...               
+        return titulos;
     }//ahí decides como vas a hacerle... es decir [vas a converitir para mostrar y luego desencoveritr para guardar ó si vas a converir desde el inicio para que se puedamostrar fácil [pero eso sí modificar los métodos ya hecho] y luego desenconvertir para guardar... yo sigo que mejor lo primero...
     
     public int darHoraInicio(){

@@ -28,11 +28,12 @@ public class Registro {
         conexion = ManejadorDB.darConexion();        
     }
     
+    //creo que voy a atener que dejar a cada elemento con su nombre, a menos que se pueda obtener de él, un único componenete
     public boolean registrarPaciente(String datos[]){//Este será exclusivamente hecho por y para el cliente...
         int codigoDatosPersonales = creador.crearDatosPersonales(false, datos[7], datos[8], datos[1], datos[3]);//Aquí ya se recibió la contraseña encriptada...
         
         if(codigoDatosPersonales!=0){
-            String registrar="INSERT INTO Paciente (nombre, sexo, birth, peso, tipoSangre, datosPersonales) VALUES (?,?,?,?,?)";//nombre, telefono, birth, dpi, sexo, peso, tipoSangre
+            String registrar="INSERT INTO Paciente (nombre, sexo, birth, peso, tipoSangre, datosPersonales) VALUES (?,?,?,?,?,?)";//nombre, telefono, birth, dpi, sexo, peso, tipoSangre
       
             try(PreparedStatement instruccion = conexion.prepareStatement(registrar)){                
                java.sql.Date birth =herramienta.devolverSQLDate(herramienta.convertirStringAUtilDate(datos[2]).getTime());
