@@ -5,10 +5,20 @@
  */
 package Reservaciones;
 
+import java.sql.Date;
+
 /**
  *
  * @author phily
  */
-public class CitaExamen {
+public class CitaExamen extends Cita{
+    int codigoExamenSolicitado;
+    
+    public CitaExamen(int codigo,  int codigoExamen, int codigoPaciente, 
+            Date fechaAcordada, int hora){
+        
+        super(codigo, codigoPaciente, hora, fechaAcordada);
+        codigoExamenSolicitado= codigoExamen;
+    }
     
 }

@@ -63,6 +63,21 @@ public class Modificacion {//creo que los métodos solo serán específicos [es 
         return false;
     }/*terminado*///será llamado sismpre que se modifiquen los datos de un médico, ya sea que cb o no los atributos que esta tabla contiene...
     
+    public boolean modificarAdministrador(int codigo, String nuevoNombre, String nuevoDPI, String nuevoContraseniaEncriptada ){
+        String modificar="UPDATE Administrador SET (nombre, DPI, contrasenia) VALUES(?,?,?) WHERE codigo = ?";
+        
+        try(PreparedStatement instruccion = conexion.prepareStatement(modificar)){
+            instruccion.setString(1, nuevoDPI);
+            instruccion.setString(1, nuevoDPI);
+            
+            instruccion.executeUpdate();            
+        }catch(SQLException sqlE){
+            System.out.println("surgió un error al modificar\nal administrador");
+            return false;
+        }
+        return true;
+    }
+    
     /*RECUERDA: que recibe los datos de un onjeto MEDICO [1 de un arr o 1 obj en particular debido a la sesion...*/
     public boolean modificarMedico(int codigo, String nombre, String numeroColegiado, int horaInicio, int horaFin, Date fechaIncorporacion){//va a ser el mismo para el ADMIN y el MEDICO
         //independientemente de como recoja la info [con arr, con un obj o indiv [aunque esto último lo dudo] el metodo no tiene afección alguna

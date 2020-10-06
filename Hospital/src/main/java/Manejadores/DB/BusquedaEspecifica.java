@@ -5,7 +5,10 @@
  */
 package Manejadores.DB;
 
+import Entidades.Medico;
+import Entidades.Usuario;
 import Kit.ListaEnlazada;
+import Manejadores.DB.Entidades.IntegradorEntidades;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,7 +20,8 @@ import java.sql.SQLException;
  * @author phily
  */
 public class BusquedaEspecifica {
-    Connection conexion = ManejadorDB.darConexion();         
+    Connection conexion = ManejadorDB.darConexion(); 
+    IntegradorEntidades integrador = new IntegradorEntidades();
     
     public int buscarIDdelLogueado(String entidad, String contrasenia, String correo){//Aquí ya se le habrá pasado la cencriptación de la contrasenia ingresada...
         int codigo=0;        
@@ -30,6 +34,10 @@ public class BusquedaEspecifica {
                 instruccion.setString(1, contrasenia);
                 instruccion.setString(2, correo);
             
+                ResultSet resultado = instruccion.executeQuery();
+                resultado.first();
+                codigo = resultado.getInt(1);
+                
             }catch(SQLException sqlE){
                 System.out.println("surgió un error al\ncorroborar identificador\ndel solicitante\n"+sqlE.getMessage());
                 codigo=0;
@@ -37,6 +45,31 @@ public class BusquedaEspecifica {
         }        
         return codigo;
     }
+    
+    /**
+     * Método útil pra hacer las búsquedas para mostrar la información
+     * del usuario logueado en cuestión..
+     * @param tipoUsuario
+     * @param codigo
+     * @return
+     */
+    public Usuario buscarUnUsuario(String tipoUsuario, int codigo){
+        String buscar ="SELECT * FROM "+tipoUsuario+" WHERE codigo = ?";
+        Usuario usuario =null;
+        
+        try(PreparedStatement instruccion = conexion.prepareStatement(buscar)){
+            instruccion.setInt(1, codigo);
+            
+            ResultSet resultado = instruccion.executeQuery();
+            resultado.first();//puesto que no se recorre con un ciclo, requiero ubicarlo de forma manual...
+            usuario = integrador.formarEntidad(resultado, tipoUsuario);
+            
+        }catch(NullPointerException | SQLException e){
+            System.out.println("surgió un error al buscar al "+tipoUsuario);
+            usuario = null;
+        }
+        return usuario;        
+    }/*terminado*///útil para los momentos en que se estaá concetrado...
     
     public boolean[] buscarHorario(int codigoLaboratorista){
         String buscar="SELECT * FROM Horario_Laboratorista WHERE codigoLaboratorista = ?";
@@ -52,6 +85,7 @@ public class BusquedaEspecifica {
             
             for (int dia = 0; dia < horario.length; dia++) {
                 horario[dia] = Boolean.parseBoolean(resultado.getString(dia+1));
+                resultado.next();
             }            
         }catch(SQLException sqlE){
             System.out.println("surgió un error al obtener el horario del laboratorista -> "+ sqlE.getMessage());
@@ -93,6 +127,7 @@ public class BusquedaEspecifica {
             instruccion.setString(1, nombreTitulo);
             
             ResultSet resultado = instruccion.executeQuery();//no habría alguna situación en la que al ir a buscar el título este no exista, así que no habrá problema con exe el getInt de una sola vez...
+            resultado.first();
             codigoTitulo = resultado.getInt(1);
         }catch(SQLException sqlE){
             System.out.println("surgio un error al recuperar el codigo del titulo -> "+ sqlE.getMessage());
@@ -109,6 +144,9 @@ public class BusquedaEspecifica {
             instruccion.setInt(1, codigo);
             
             ResultSet resultado = instruccion.executeQuery();
+            resultado.first();//así me ubico en el primer y único registro [al menos para este caso...]
+            
+            nombre= resultado.getString(1);
             
             while(resultado.next()){
                 nombre = resultado.getString(1);//como se supone no habrán más..
@@ -118,6 +156,32 @@ public class BusquedaEspecifica {
             nombre=null;
         }
         return nombre;
-    }
+    }        
+    
+    //>>> Propios de PACIENTE!!!
+    
+    public Medico[] buscarMedicosPorEspecialidad(String nombreEspecialidad){
+        String buscar="SELECT * FROM Medico Where codigo = (SELECT codigoMedico FROM Especialidad_Medico"
+           + "WHERE codigoEspecialidad = ?)";
+        Medico medicos[]=null;
+        
+        try(PreparedStatement instruccion = conexion.prepareStatement(buscar)){
+            instruccion.setString(1, nombreEspecialidad);
+            
+            ResultSet resultado = instruccion.executeQuery();
+            resultado.last();
+            
+            medicos = new Medico[resultado.getRow()];
+            resultado.first();
+            
+            for (int medicoActual = 0; medicoActual < medicos.length; medicoActual++) {
+                medicos[medicoActual] = (Medico)integrador.formarEntidad(resultado, "Medico");                
+                resultado.next();
+            }//recuerda que si es null, no deberás mostrarlo... porque surgió un problema en su formación...
+        }catch(SQLException sqlE){
+            System.out.println("surgió un problema en la búsqueda\ndel listado de lso especialistas\n"+sqlE.getMessage());            
+        }//Aquí no hago null, puesto que de eso se encarga el formador de entidades, por lo cual lo único qu edeberá hacer para tener bien la información,es saltarte dichos null...        
+        return medicos;
+    }/*terminado*///seá empleado en el apartado de agendación CONSULTAS_MÉDICAS!!!
     
 }

@@ -89,22 +89,7 @@ public class VerificadorDB {
         return estaLlena;
     }
     
-    /*aquí hacia abajito los métodos para verificar lo del logueo y lo del registro :3*/
-    public Usuario verificarLogueo(String tipoUsuario, String[] datosLogueo){//0-> usuario, 1-> contrasenia...    aquí será donde se encripte puesto que mando un arreglo desde la interfaz... xD
-   //el tipo de usario será obtenido según la selección del cbBox...        
-//                  
-//      if(tipoUsuario.equals("Paciente")){
-//          //aquí y en cada uno de los casos, almacenarías el usuario en su form amás general, de tal manera que si es null puedas saber que devolver...
-//      }
-//      if(tipoUsuario.equals("Medico")){
-//      }
-//      if(tipoUsuario.equals("Laboratorista")){
-//      }
-//        mientras, en lo que reviso lo de la carga...
-        
-    return null;
-    }
-    
+  
 
     
   

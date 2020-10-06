@@ -43,6 +43,8 @@ public class BusquedaGeneral {
         
         try(PreparedStatement instrucciones = conexion.prepareStatement(crear)){            
             ResultSet resultado = instrucciones.executeQuery();
+            
+            resultado.first();//puesto que no se usa un cilco... para hacer la ubicación...
             datosPersonales = new DatosPersonales(resultado.getString(2), resultado.getString(3), resultado.getString(4), resultado.getString(5));                        
         }catch(SQLException e){
             datosPersonales = null;
@@ -98,7 +100,7 @@ public class BusquedaGeneral {
         }             
         
         return usuarios;
-    }//este sería el método de convergencia... puesto que se adapta a todos los usuarios, a diferencia de DocumentoS
+    }//este sería el método de convergencia... puesto que se adapta a todos los usuarios, a diferencia de DocumentoS            
     
     /**
      * empleado por el ADMIN de forma directa... para hacer las

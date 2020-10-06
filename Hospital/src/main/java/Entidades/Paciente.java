@@ -36,7 +36,23 @@ public class Paciente extends Usuario{
     @Override
      public void verReportes(String tipoReporte){//aquí deplano que se colocará un switch, para que convergan todos los métodos que implemente la entidad en cuestión...
          //por supuestisimo xD aquí deberán etar las implementaciones correspondientes a las que el paciente deba hacer... :) ya sabes... son los reportes que te solicita el doc...         
-    }     
-    
+    }             
+     
+     public String darGenero(){
+         return genero;
+     }
+     
+     public Date darBirth(){
+         return birth;
+     }
+     
+     public String darPeso(){
+         return peso;
+     }
+     
+     public String darTipoSangre(){
+         return tipoSangre;
+     }
+     
     
 }

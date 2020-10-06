@@ -4,6 +4,7 @@
     Author     : phily
 --%>
 
+<%@page import="Manejadores.DB.BusquedaGeneral"%>
 <%@page import="Manejadores.DB.CreacionAdministrada"%>
 <%@page import="Documentacion.Examen"%>
 <%@page import="Manejadores.DB.Modificacion"%>
@@ -13,8 +14,9 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <link rel="stylesheet" href="cssAdmin.css">        
-        <%!Estructura[] estructura;%>
+        <link rel="stylesheet" href="cssAdmin.css">     
+        <%!BusquedaGeneral buscador = new BusquedaGeneral();%>
+        <%!Estructura[] estructura = buscador.buscarEstructuras("Examen");%>
         <%!Examen[] examen;%>
         <%!Modificacion modificador = new Modificacion();%>
         <%!CreacionAdministrada creacion = new CreacionAdministrada();%>

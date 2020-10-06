@@ -32,11 +32,11 @@
                 request.getRequestDispatcher("cargaDatos.jsp").forward(request, response);
                 //response.sendRedirect("cargaDatos.jsp");                
             }else if(request.getParameter("aceptacion")!=null){                    
-                if(request.getParameter("aceptacion").equals("INGRESAR") && verificador.verificarLogueo(request.getParameter("tipoUsuario"), request.getParameterValues("logueo"))!=null){
-                    int codigoEntidad= buscadorMinucioso.buscarIDdelLogueado(request.getParameter("tipoUsuario"), request.getParameter("contrasenia"), request.getParameter("correo"));
+                if(request.getParameter("aceptacion").equals("INGRESAR") && request.getParameter("contrasenia")!=null && request.getParameter("correo")!=null){
+                    int codigoEntidad= buscadorMinucioso.buscarIDdelLogueado(request.getParameter("tipoUsuario"), herramienta.encriptarContrasenia(request.getParameter("contrasenia")), request.getParameter("correo"));
                     
                     if(codigoEntidad!=0){
-                        request.setAttribute("id", request.getParameter("logueo"));
+                        request.setAttribute("id", codigoEntidad);
                         response.sendRedirect(herramienta.darPaginaPerfil(request.getParameter("tipoUsuario")));
                     }%><!--y así se hace un logueo xD-->
                     <%}if(request.getParameter("aceptacion").equals("REGISTRAR") && !registrador.registrarPaciente(request.getParameterValues("registro"))){%><%--lo mismo digo aquí...--%>                                     

@@ -4,6 +4,7 @@
     Author     : phily
 --%>
 
+<%@page import="Manejadores.DB.BusquedaGeneral"%>
 <%@page import="Manejadores.DB.Creacion"%>
 <%@page import="Manejadores.DB.Modificacion"%>
 <%@page import="Documentacion.Estructura"%>
@@ -14,7 +15,8 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" href="cssAdmin.css">        
-        <%!Estructura[] estructura;%>
+        <%!BusquedaGeneral buscador = new BusquedaGeneral();%>
+        <%!Estructura[] estructura =buscador.buscarEstructuras("Consulta");%>
         <%!Consulta[] consulta;%>
         <%!Modificacion modificador = new Modificacion();%>
         <%!Creacion creador = new Creacion();%>

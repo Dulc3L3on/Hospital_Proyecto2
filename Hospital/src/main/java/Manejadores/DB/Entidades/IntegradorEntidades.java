@@ -19,6 +19,9 @@ import Kit.ListaEnlazada;
 import Manejadores.DB.BusquedaEspecifica;
 import Manejadores.DB.BusquedaGeneral;
 import Reservaciones.Cita;
+import Reservaciones.CitaExamen;
+import Reservaciones.CitaMedica;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -174,16 +177,60 @@ public class IntegradorEntidades {
         Cita cita = null;
         
         switch(tipo){
-            case "CitaMedica":
+            case "Cita_Medica":
+                cita = formarCitaMedica(resultado);
             break;
             
-            case "CitaExamen":
-            break;
-        }
-        
+            case "Cita_Examen":
+                cita = formarCitaExamen(resultado);
+            break;            
+        }        
         return cita;
     }
     
-  
+    private CitaMedica formarCitaMedica(ResultSet resultado){
+        CitaMedica cita = null;
+        
+        try{
+            cita = new CitaMedica(resultado.getInt(1), resultado.getInt(2),resultado.getInt(3), 
+                  resultado.getString(4), resultado.getDate(5), resultado.getInt(6));                
+            
+        }catch(SQLException sqlE){
+            System.out.println("surgió un error al\nformar la cita médica\n"+sqlE.getMessage());
+            cita = null;
+        }
+        return cita;
+    }    
+    
+    private CitaExamen formarCitaExamen(ResultSet resultado){
+        CitaExamen cita = null;
+        
+        try{
+            cita = new CitaExamen(resultado.getInt(1), resultado.getInt(2), resultado.getInt(3),
+                  resultado.getDate(4), resultado.getInt(5));
+            
+        }catch(SQLException sqlE){
+            System.out.println("surgió un error al\nformar la cita de laboratorio\n"+sqlE.getMessage());
+            cita = null;
+        }
+        return cita;
+    }
+    
+   public CitaMedica formarCitaAlternativa(ResultSet resultado, int medicoSolicitado, int codigoPaciente, String especialidad, Date fechaRealizacion, int hora){//para este método y para el de las reservaciones de examnes [si es que se llega a requerir algo así... no deberán tener un método de convergencia como el de las estructuras, usuarios y documentos...
+       CitaMedica cita = null;    
+       
+       try{
+           if(hora!=resultado.getInt(1)){
+               cita = new CitaMedica(codigoPaciente,medicoSolicitado, especialidad, fechaRealizacion, hora);                                    
+           }else{
+               resultado.next();//puesto que es por referencia cuando termine su rabajo este métooo, el resultado del otro lado estará en la siguiente posición que fue cambiada en esta parte...
+           }                      
+       }catch(SQLException sqlE){
+           System.out.println("surgió un error al formar\nla cita alternativa\n"+sqlE.getMessage());
+           return null;
+       }              
+       return cita;
+    }
+    
     
 }

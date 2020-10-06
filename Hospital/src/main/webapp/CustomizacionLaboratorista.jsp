@@ -25,7 +25,7 @@
         <%!Creacion creador = new Creacion();%><!--desaparecera-->
         <%!CreacionAdministrada creacion = new CreacionAdministrada();%><!--desaparecera-->
         <%!Herramienta herramienta = new Herramienta();%><!--creo que tambien...-->
-        <%!Usuario[] usuarios=buscador.buscarUsuarios("Medico");%>
+        <%!Usuario[] usuarios=buscador.buscarUsuarios("Laboratorista");%>
         <%!Laboratorista[] laboratorista;%>             
         <%!int numero=-1;%>
     </head>
