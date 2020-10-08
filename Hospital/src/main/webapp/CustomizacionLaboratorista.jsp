@@ -79,7 +79,7 @@
         </div>
         
         <div id="contenedorInformacion">
-            <h3>CÓDIGO: <%=codigo%></h3>
+            <h3>CÓDIGO: LAB-<%=codigo%></h3>
             <form method="POST" action="customizacionLaboratorista.jsp">
                 <img src="img/laboratorista.png" id="fotografia" alt="iconoLaboratorista">
                 <center>

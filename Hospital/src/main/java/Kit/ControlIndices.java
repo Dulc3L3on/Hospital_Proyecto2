@@ -12,13 +12,14 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import javax.swing.JOptionPane;
 
 /**
  *
  * @author phily
  */
-public class ControlIndices {//Este será empleado por todas aquellas entidades que aparecen en el txt, puesto que su FK es # o tiene parte de él, y como no sabes como volver autoincrementable luego de eso y aunque supieras no para todas funciona [más que todo en el caso de las citas, puesto que son traspasadas xD a la tabla de las atendidas...
+public class ControlIndices implements Serializable{//Este será empleado por todas aquellas entidades que aparecen en el txt, puesto que su FK es # o tiene parte de él, y como no sabes como volver autoincrementable luego de eso y aunque supieras no para todas funciona [más que todo en el caso de las citas, puesto que son traspasadas xD a la tabla de las atendidas...
     String path ="noBorrar.txt";
     int ultimosIndicesCreados[] = {-1, -1, -1, -1, -1, -1, -1, -1, -1};//este se llenará con el contenido de los números que se encuentran en el archivo correspondiente... pero en el caso de la carga de datos, esto no será necesario, al menos al cargar luego de haberlo cargado sí será necesario... al igual que despueś de haber inicizdo secsión una determinada entidad
     //0-> citaExamen, 1-> citaMedica, 2-> MEDICO, 3-> LABORATORISTA, 4-> PACIENTE, 5-> ADMINISTRADOR, 6-> Examen, 7-> Resultado, 8-> Informe [médico]

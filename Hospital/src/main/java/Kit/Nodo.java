@@ -5,11 +5,13 @@
  */
 package Kit;
 
+import java.io.Serializable;
+
 /**
  *
  * @author phily
  */
-public class Nodo <E>{
+public class Nodo <E> implements Serializable{
     
      public E contenido;
      private E atributoExtra;

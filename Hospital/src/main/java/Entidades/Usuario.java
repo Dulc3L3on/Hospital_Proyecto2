@@ -6,15 +6,20 @@
 package Entidades;
 
 import Extras.DatosPersonales;
+import java.io.Serializable;
 
 /**
  *
  * @author phily
  */
-public class Usuario {        
+public class Usuario implements Serializable{        
     public int codigo;
     public String nombre;
     public DatosPersonales datosPersonales;
+    
+    public Usuario(){
+    
+    }
     
     public Usuario(int elCodigo, String elNombre, DatosPersonales losDatosPersonales){
         codigo = elCodigo;

@@ -5,12 +5,14 @@
  */
 package Manejadores.DB;
 
+import Documentacion.Consulta;
 import Documentacion.Documento;
 import Documentacion.Estructura;
 import Entidades.Usuario;
 import Extras.DatosPersonales;
 import Kit.ListaEnlazada;
 import Manejadores.DB.Entidades.IntegradorEntidades;
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -20,7 +22,7 @@ import java.sql.SQLException;
  *
  * @author phily
  */
-public class BusquedaGeneral {
+public class BusquedaGeneral implements Serializable{
     private static Connection conexion;
 //    ListaEnlazada<Usuario> listaUsuarios;
     Usuario[] usuarios;
@@ -69,6 +71,22 @@ public class BusquedaGeneral {
             System.out.println("surgió un error al recuperar las especialidades"+"/n"+e.getMessage());                        
         }        
         return especialidades;//De esta manera, no hanrá problema cuando no tenga nada, puesto que dará un valor 0...
+    }
+    
+    public ListaEnlazada<Consulta> darConsultas(){
+        String buscar = "SELECT * FROM Consulta";
+        ListaEnlazada<Consulta> consultas = new ListaEnlazada();
+        
+        try(PreparedStatement instruccion = conexion.prepareStatement(buscar)){        
+            ResultSet resultado = instruccion.executeQuery();
+            
+            while(resultado.next()){
+                consultas.anadirAlFinal(new Consulta(resultado.getString(1), resultado.getString(2)));
+            }            
+        }catch(SQLException sqlE){
+            System.out.println("surgió un error al recuperar\nel las consultas disponibles\n"+sqlE.getMessage());
+        }
+        return consultas;        
     }
     
     /**

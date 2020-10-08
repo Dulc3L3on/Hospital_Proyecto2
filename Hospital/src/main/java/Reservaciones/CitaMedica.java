@@ -4,14 +4,14 @@
  * and open the template in the editor.
  */
 package Reservaciones;
-
+import java.io.Serializable;
 import java.sql.Date;
 
 /**
  *
  * @author phily
  */
-public class CitaMedica extends Cita{        
+public class CitaMedica extends Cita implements Serializable{        
     int codigoMedico;    
     String tipoConsulta;       
                

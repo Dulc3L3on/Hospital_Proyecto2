@@ -6,13 +6,14 @@
 package Entidades;
 
 import Extras.DatosPersonales;
+import java.io.Serializable;
 import java.sql.Date;
 
 /**
  *
  * @author phily
  */
-public class Laboratorista extends Usuario{    
+public class Laboratorista extends Usuario implements Serializable{    
     private String registroMS;
     private int examenAsignado;
     private Date fechaIncorporacion;

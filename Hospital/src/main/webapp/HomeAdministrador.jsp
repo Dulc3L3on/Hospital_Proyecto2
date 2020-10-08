@@ -24,6 +24,7 @@
             <input type="submit" id="opcionesEntidades" name="opcion" value="Laboratorista" >
             <input type="submit" id="opcionesEntidades" name="opcion" value="Examen" >
             <input type="submit" id="opcionesEntidades" name="opcion" value="Consulta" >            
+            <input type="submit" id="opcionesEntidades" name="opcion" value="Reportes" >            
             <a href="HomeAdministrador.jsp"><img src="img/iconoPerfil3.png" width="50" height="50" id="perfil"></a><!--aquí irá la dirección a la página en la que podrán ver sus perfiles...-->
             <br/>
             <hr>                   

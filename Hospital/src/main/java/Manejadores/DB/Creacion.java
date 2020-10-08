@@ -6,6 +6,7 @@
 package Manejadores.DB;
 
 import Kit.Herramienta;
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,7 +18,7 @@ import java.sql.Statement;
  * @author phily
 */
                         //además de tener a los métodos con los que crearán los registros hechos por el administrador también irán todos los métodos para creación que independientemente de dónde sean llamados
-public class Creacion {//harán lo mismo puesto que la clase que requiere de una pequeña variación del proceso, se encargará de ello... estos son identificacbles puesto que poseen el atrib esCarga, para saber si debe o no mostrar el msje de error
+public class Creacion implements Serializable{//harán lo mismo puesto que la clase que requiere de una pequeña variación del proceso, se encargará de ello... estos son identificacbles puesto que poseen el atrib esCarga, para saber si debe o no mostrar el msje de error
       private static Connection conexion;
       private Herramienta herramienta = new Herramienta();
                 
@@ -46,11 +47,12 @@ public class Creacion {//harán lo mismo puesto que la clase que requiere de una
                 instruccion.executeUpdate();
             
                 ResultSet resultado=instruccion.getGeneratedKeys();
+                resultado.next();
                 idDelCreado=resultado.getInt(1);
             }//Aquí no colocarás un else, puesto que no es una tabla exterior, como médico, paciente, labo...                             
             
         }catch(SQLException sqlE){//no debe mostrar nada puesto que es una tabla que depende de otras... [además para la edición, donde prácticamente sería indep, no se emplea este método, así que...                      
-            
+            System.out.println("surgió un error al\ncrear los datos personales"+sqlE.getMessage());
         }finally{
             return idDelCreado;//tienes que colocar una condición de que si devulve 0, entonces no puede crearse a la entidad correspondiente
         }//media vez devuelve 0, es porque surgió un error...          
@@ -64,7 +66,8 @@ public class Creacion {//harán lo mismo puesto que la clase que requiere de una
             instruccion.setString(1, nombre);
             
             instruccion.executeUpdate();            
-        }catch(SQLException ex){                                               
+        }catch(SQLException ex){ 
+            System.out.println("surgió un error al\ncrear la especialidad");
            return false;
         }        
         return true;

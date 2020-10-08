@@ -31,19 +31,21 @@
                 //request.setAttribute("conexion", manejadorDB.darConexion());                
                 request.getRequestDispatcher("cargaDatos.jsp").forward(request, response);
                 //response.sendRedirect("cargaDatos.jsp");                
-            }else if(request.getParameter("aceptacion")!=null){                    
-                if(request.getParameter("aceptacion").equals("INGRESAR") && request.getParameter("contrasenia")!=null && request.getParameter("correo")!=null){
-                    int codigoEntidad= buscadorMinucioso.buscarIDdelLogueado(request.getParameter("tipoUsuario"), herramienta.encriptarContrasenia(request.getParameter("contrasenia")), request.getParameter("correo"));
+            }                    
+                if(request.getParameter("aceptacion")!=null){
+                    if(request.getParameter("aceptacion").equals("INGRESAR")  && request.getParameter("contrasenia")!=null && request.getParameter("correo")!=null){
+                        int codigoEntidad= buscadorMinucioso.buscarIDdelLogueado(request.getParameter("tipoUsuario"), herramienta.encriptarContrasenia(request.getParameter("contrasenia")), request.getParameter("correo"));
                     
-                    if(codigoEntidad!=0){
-                        request.setAttribute("id", codigoEntidad);
-                        response.sendRedirect(herramienta.darPaginaPerfil(request.getParameter("tipoUsuario")));
-                    }%><!--y así se hace un logueo xD-->
-                    <%}if(request.getParameter("aceptacion").equals("REGISTRAR") && !registrador.registrarPaciente(request.getParameterValues("registro"))){%><%--lo mismo digo aquí...--%>                                     
-                   <!--se manda a avisar sobre la falla-->                                     
-               
+                        if(codigoEntidad!=0){
+                            request.setAttribute("id", codigoEntidad);
+                            response.sendRedirect(herramienta.darPaginaPerfil(request.getParameter("tipoUsuario")));
+                        }//<!--y así se hace un logueo xD-->
+                    }
+                   if(request.getParameter("aceptacion")!=null && !registrador.registrarPaciente(request.getParameterValues("registro"))){%><%--lo mismo digo aquí...--%>                                     
+                   <!--se manda a avisar sobre la falla-->                                                   
+                  <%}%>
                 <%}%>
-            <form method="POST" action="index">
+            <form method="POST" action="index.jsp" id="menucito">
                     <select name="tipoUsuario">
                         <option name="Paciente">Paciente</option>
                         <option name="Administrador">Administrador</option>
@@ -52,7 +54,7 @@
                     </select>
                     <input type="email" name="correo" placeholder="email" required><%--vamos a probar agrupando los btn... no creo que de problemas puesto que todo lo trata como str... sino pues vuelve a separarlos...--%>
                     <input type="password" name="contrasenia" placeholder="password" required>
-                    <input type="submit" name="aceptacion" value="INGRESAR">                      
+                    <button type="submit" name="aceptacion" value="INGRESAR">INGRESAR</button>                      
                         <%--no sería necesario un script... pues podrías revisar con un mpetodo de verficación para el logueo si sale bien, redireccionar con el response y si no regresar a la página y mostrar un msje indicando que no ingresó correctamente los datos...--%>
                     </br>
                     <hr>      
@@ -75,11 +77,10 @@
                                 <table>
                                     <tr>
                                         <th>
-                                            <input type="text" name="registro" placeholder="Nombre" required>
+                                            <input id="datos" type="text" name="registro" placeholder="nombre" required>
                                         </th>                                    
-                                        <th>
-                                            <h6>tel: </h6>
-                                            <input type="tel" name="registro" placeholder="telefono" min="0" required><!--recuerda, si quieres especificarle tamaño deberá ser en el CSS-->
+                                        <th>                                            
+                                            <input id="datos" type="number" name="registro" placeholder="telefono" min="0" maxlength="8"required><!--recuerda, si quieres especificarle tamaño deberá ser en el CSS-->
                                         </th>                                    
                                     </tr>
                                     <tr>
@@ -89,10 +90,10 @@
                                     </tr>
                                     <tr>
                                         <th>
-                                             <input type="date" name="registro" value <%=hoy%> max <%=hoy%>><%--sería bueno que se le pudiera cb el límite según el número de mes, pero eso ya es algo terciario... --%>                                                                                       
+                                             <input id="datos" type="date" name="registro" value <%=hoy%> max <%=hoy%> required><%--sería bueno que se le pudiera cb el límite según el número de mes, pero eso ya es algo terciario... --%>                                                                                       
                                         </th>
                                         <th>
-                                             <input type="number" name="registro" placeholder="DPI" min="0" required>
+                                             <input id="datos" type="number" name="registro" placeholder="DPI" min="0" required>
                                         </th><!--si da error en esta línea es por la forma en que asigne...-->     
                                         
                                     </tr>                                    
@@ -103,11 +104,12 @@
                                                 <option name="masculino">masculino</option>                                                
                                             </select>
                                         </th>                                                                     
-                                        <th>
-                                            <input type="number" name="registro" placeholder="peso" min="5" required><h6>kg</h6>
+                                        <th>                                            
+                                            <input id="datos" type="number" id="peso" name="registro" placeholder="peso" min="5" required>
+                                            <label for =""></label>
                                         </th>                                                                              
                                         <th>
-                                            <legend>tipo de sangre</legend>>
+                                            <legend>tipo de sangre</legend>
                                             <select name="registro"><%--si llegara a dar error es porque este es un listado y por ello hay que explicitar que se quiere una seleccion...--%>
                                                 <option name="A+">A+</option>
                                                 <option name="A-">A-</option>
@@ -122,14 +124,14 @@
                                     </tr>
                                     <tr>                                   
                                         <th>
-                                            <input type="email" name="registro" palceholder="tucorreo@algo.com" required>
+                                            <input id="datos" type="email" name="registro" placeholder="tucorreo@algo.com" required>
                                         </th>
                                         <th>
-                                             <input type="password" name="registro" required>
+                                             <input id="datos" type="password" name="registro" placeholder ="tuContrasenia" required>
                                         </th>
                                     </tr>                                 
                                     <tr>
-                                        <input type="submit" name="aceptacion" value="REGISTRAR">                                                                             
+                                    <button type="submit" name="aceptacion" value="REGISTRAR">REGISTRAR</button>
                                         <%--para este de registro, salga bien o no debo mantenerlo
                                         en esta página para que después decida loguearse :3, es decir no debo hacer nada mas que lo que en el if está --%>                                        
                                     </tr>
@@ -138,7 +140,6 @@
                         </th>
                     </tr>        
                 </table>            
-            </div>
-          <%}%>
+            </div>          
     </body>
 </html>

@@ -6,6 +6,7 @@
 package Verificadores;
 
 import Entidades.Usuario;
+import java.io.Serializable;
 import Manejadores.DB.ManejadorDB;
 import Manejadores.DB.Registro;
 import Manejadores.DB.Sesion;
@@ -18,7 +19,7 @@ import java.sql.Statement;
  *
  * @author phily
  */
-public class VerificadorDB {
+public class VerificadorDB implements Serializable{
     private static Connection conexion;
     Registro registrador;
     Sesion sesion;

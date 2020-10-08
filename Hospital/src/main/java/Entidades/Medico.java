@@ -6,6 +6,7 @@
 package Entidades;
 
 import Extras.DatosPersonales;
+import java.io.Serializable;
 import Kit.ListaEnlazada;
 import Kit.Nodo;
 import java.sql.Date;
@@ -14,7 +15,7 @@ import java.sql.Date;
  *
  * @author phily
  */
-public class Medico extends Usuario{    
+public class Medico extends Usuario implements Serializable{    
     String numeroColegiado;    
     ListaEnlazada<String> titulos;//estos se volverán un obj...
     int horaInicio;

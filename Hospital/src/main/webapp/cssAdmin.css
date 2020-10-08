@@ -22,7 +22,10 @@ and open the template in the editor.
 }
     
 #opcionesEntidades{
-     padding-right: 100px;     
+    /* padding-right: 100px;     */
+    height: 35px;
+    padding-left: 50px;
+    padding-right: 50px;
 }
 
 #contenedorInformacion{
@@ -61,7 +64,11 @@ and open the template in the editor.
 }
 
 #frameAdministrador{
-    height: 1000px;
-    width: 1800px;
+    height: 895px;
+    width: 1900px;
     border: none;
+}
+
+#menucito{
+    float: right;
 }

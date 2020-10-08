@@ -81,7 +81,7 @@
         </div>
         
         <div id="contenedorInformacion">
-            <h3>CÓDIGO: <%=codigo%></h3>
+            <h3>CÓDIGO: MED-<%=codigo%></h3>
             <form method="POST" action="customizacionMedico.jsp"><!--pienso que no habrá problemas con el hecho de que estén en diferente for los btn y los campos, puesto que están las variables, las cuales son de la página entera, no de un form o div en particular,y al ser empleadoas por ambos form, existe una conexión entre ellos...-->
                 <img src="img/iconoMedico.png" id="fotografia" alt="iconoMedico">
                 <center>

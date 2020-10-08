@@ -5,13 +5,14 @@
  */
 package Reservaciones;
 
+import java.io.Serializable;
 import java.sql.Date;
 
 /**
  *
  * @author phily
  */
-public class Cita {    
+public class Cita implements Serializable{    
     int codigo;
     int paciente;
     int hora;
@@ -29,5 +30,23 @@ public class Cita {
         hora = horaInicio;
         fecha = laFecha;
     }//útil para las citas alternas del paciente...
+    
+    public int darCodigo(){
+        return codigo;
+    }
+    
+    public int darHora(){
+        return hora;
+    }
+    
+    public int darCodigoPaciente(){
+        return paciente;
+    }
+    
+    public Date darFecha(){
+        return fecha;
+    }
+    
+    
     
 }

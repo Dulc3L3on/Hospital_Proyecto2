@@ -35,12 +35,12 @@
                 
                 <%if(estructura!=null){%>
                     <%for(int numeroEstructura=0; numeroEstructura<estructura.length; numeroEstructura++){%>                
-                        <p><%estructura[numeroEstructura].darNombre();%><a href="customizacionConsulta.jsp?numero=${numeroEstructura}">ver</a></p>
+                        <p><%estructura[numeroEstructura].darNombre();%><a href="CustomizacionConsulta.jsp?numero=${numeroEstructura}">ver</a></p>
                         <br/>                
                     <%}%>
                 <%}%>
             </div>    
-            <form method="POST" action="customizacionConsulta.jsp" id="comandos">
+            <form method="POST" action="CustomizacionConsulta.jsp" id="comandos">
                 <%if(request.getParameter("opcion")!=null && numero!=-1) {
                     if(request.getParameter("opcion").equals("MODIFICAR")){
                         //se llaman al método para hacer la actualización en la tabla...
@@ -59,7 +59,7 @@
         </div>
         
         <div id="contenedorInformacion">            
-            <form method="POST" action="customizacionConsulta.jsp"><!--pienso que no habrá problemas con el hecho de que estén en diferente for los btn y los campos, puesto que están las variables, las cuales son de la página entera, no de un form o div en particular,y al ser empleadoas por ambos form, existe una conexión entre ellos...-->
+            <form method="POST" action="CustomizacionConsulta.jsp"><!--pienso que no habrá problemas con el hecho de que estén en diferente for los btn y los campos, puesto que están las variables, las cuales son de la página entera, no de un form o div en particular,y al ser empleadoas por ambos form, existe una conexión entre ellos...-->
                 <img src="img/consultaMedica.jpeg" id="fotografia" alt="iconoConsulta">
                 <center>
                     <table cellspacing="25">

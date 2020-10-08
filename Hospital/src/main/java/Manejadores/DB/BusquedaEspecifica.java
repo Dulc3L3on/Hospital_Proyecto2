@@ -9,7 +9,9 @@ import Entidades.Medico;
 import Entidades.Usuario;
 import Kit.ListaEnlazada;
 import Manejadores.DB.Entidades.IntegradorEntidades;
+import java.io.Serializable;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,9 +21,14 @@ import java.sql.SQLException;
  * cualquiera de las entidades existentes en la DB * 
  * @author phily
  */
-public class BusquedaEspecifica {
+public class BusquedaEspecifica implements Serializable{
     Connection conexion = ManejadorDB.darConexion(); 
-    IntegradorEntidades integrador = new IntegradorEntidades();
+    IntegradorEntidades integrador;
+    
+    public BusquedaEspecifica(){
+        integrador = new IntegradorEntidades();
+        integrador.establecerBUsquedaEspecifica(this);
+    }
     
     public int buscarIDdelLogueado(String entidad, String contrasenia, String correo){//Aquí ya se le habrá pasado la cencriptación de la contrasenia ingresada...
         int codigo=0;        
@@ -183,5 +190,25 @@ public class BusquedaEspecifica {
         }//Aquí no hago null, puesto que de eso se encarga el formador de entidades, por lo cual lo único qu edeberá hacer para tener bien la información,es saltarte dichos null...        
         return medicos;
     }/*terminado*///seá empleado en el apartado de agendación CONSULTAS_MÉDICAS!!!
+    
+    public Date buscarFechaPrimeraConsulta(int codigoPaciente){//Si no funciona lo borras y ya xd, lo importarnte es que no dejes que se pase de la fecha actual...
+        String buscar ="SELECT fecha FROM Consulta_Atendida WHERE codigoPaciente = ? ORDER BY"
+            + "fecha ASC LIMIT 1";
+        Date primeraConsulta = null;
+        
+        try(PreparedStatement instruccion = conexion.prepareStatement(buscar)){
+            instruccion.setInt(1, codigoPaciente);
+            
+            ResultSet resultado = instruccion.executeQuery();
+            
+            while(resultado.next()){//Aunque solo será 1 resultado :v
+                primeraConsulta = resultado.getDate(1);
+            }            
+        }catch(SQLException sqlE){
+            System.out.println("surgió un error al obtener\nla fecha de la primer consulta realizada\n"+sqlE.getMessage());
+            primeraConsulta=null;
+        }
+        return primeraConsulta;                
+    }
     
 }

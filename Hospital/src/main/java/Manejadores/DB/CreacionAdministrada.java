@@ -6,6 +6,7 @@
 package Manejadores.DB;
 
 import Kit.Herramienta;
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,7 +17,7 @@ import java.sql.Statement;
  *
  * @author phily
  */
-public class CreacionAdministrada {
+public class CreacionAdministrada implements Serializable{
     Connection conexion = ManejadorDB.darConexion();
     Creacion creador = new Creacion();
     Herramienta herramienta = new Herramienta();

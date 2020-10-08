@@ -7,6 +7,7 @@ package Manejadores.DB;
 
 import Kit.Herramienta;
 import Kit.ListaEnlazada;
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -16,31 +17,13 @@ import java.sql.SQLException;
  *
  * @author phily
  */
-public class Modificacion {//creo que los métodos solo serán específicos [es decir para 1 solo elemtneo de cualquiera de las entidades existentes...
+public class Modificacion implements Serializable{//creo que los métodos solo serán específicos [es decir para 1 solo elemtneo de cualquiera de las entidades existentes...
     Connection conexion = ManejadorDB.darConexion();
     Herramienta herramienta = new Herramienta();
     Creacion creador = new Creacion();
     BusquedaEspecifica buscadorMinucioso = new BusquedaEspecifica();
     
-    public void modificar(String tipoAModificar){
-        switch(tipoAModificar){
-            case "Medico":
-                
-                
-            break;
-            
-            case "Laboratorista":
-            break;
-            
-            case "Paciente":
-            break;
-            
-            case "Administrador"://este será uno de lo súltimo en ser implementados, puesto que no fue solicitado el proceso...
-            break;            
-        }
-        
-    }//vamos a ver si es buena idea hacer este método de convergencia... puesto que debes devolver el código en el listado y 
-    
+   
     /*empleado por todos los usuarios...*/
     public boolean modificarDatosPersonales(int codigo, String correo, String contrasenia, String numeroTelefono, String DPI){
         String modificar ="UPDATE Datos_Personales SET correo = ? contrasenia = ? telefono = ? DPI = ? WHERE codigo = ?";

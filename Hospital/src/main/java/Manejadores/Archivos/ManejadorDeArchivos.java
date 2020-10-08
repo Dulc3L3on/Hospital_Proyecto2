@@ -6,6 +6,7 @@
 package Manejadores.Archivos;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.fileupload.FileItem;
@@ -17,8 +18,8 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
  *
  * @author phily    
  */
-public class ManejadorDeArchivos {
-    String repositorio="Hospital/src/main/resource/CargaXML";
+public class ManejadorDeArchivos implements Serializable{
+    String repositorio="/";//lo cambié para que sea la raiz...
     
     public void guardarArchivosCargados(HttpServletRequest request){
         DiskFileItemFactory fabrica = new DiskFileItemFactory();

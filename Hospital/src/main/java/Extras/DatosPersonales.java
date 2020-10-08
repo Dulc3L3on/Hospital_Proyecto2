@@ -5,11 +5,13 @@
  */
 package Extras;
 
+import java.io.Serializable;
+
 /**
  *
  * @author phily
  */
-public class DatosPersonales {  
+public class DatosPersonales implements Serializable{  
     private int codigo;//esto para cuando se realicen las actualizaciones... o aún eliminaciones...
     private String correo;
     private String contrasenia;

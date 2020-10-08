@@ -5,44 +5,71 @@
  */
 package Kit;
 
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Base64;
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 
 /**
  *
  * @author phily
  */
-public class Herramienta {//aquí iran las herramientas que no encajen con las clases, y sean necesarias...
+public class Herramienta implements Serializable{//aquí iran las herramientas que no encajen con las clases, y sean necesarias...
     int[] ultimosIDCreados;//al iniciar el programa este obtendrá sus valores por medio del método de manejadorArch con el cual se leen las líneas de los ID... para la primera ejecució, solo será necesario para ExAt, puesto que los demás son brindados por el XML...
+    static final String contraseniaMaestra = "proyecto2_Hospital";
                
     public String encriptarContrasenia(String contrasenia){
-        String contraseniaEncriptada=null;
+        String encriptada=null;        
         
         try {
-            MessageDigest digestor = MessageDigest.getInstance("MD5");
-            byte[] bitesEncriptados = digestor.digest(contrasenia.getBytes());
-            BigInteger superEntero = new BigInteger(1, bitesEncriptados);//hemos convertido a un hash MD5 :3 xD
-            
-            contraseniaEncriptada = superEntero.toString(16);
-            
-            while(contraseniaEncriptada.length()<32){//Se rellenan espacios faltantes :0 xD
-                contraseniaEncriptada = "0"+contraseniaEncriptada;
-            }                       
-        } catch (NoSuchAlgorithmException ex) {
-            System.out.println("surió un error con el algoritmo de encriptacion");
-        }catch(Exception e){
-            System.out.println("surgio un error al encriptar la contrasenia");
-        }        
-        return contraseniaEncriptada;        
-    }     
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] digestOfPassword = md.digest(contraseniaMaestra.getBytes("utf-8"));
+            byte[] keyBytes = Arrays.copyOf(digestOfPassword, 24);
+
+            SecretKey key = new SecretKeySpec(keyBytes, "DESede");
+            Cipher cipher = Cipher.getInstance("DESede");
+            cipher.init(Cipher.ENCRYPT_MODE, key);
+
+            byte[] plainTextBytes = contrasenia.getBytes("utf-8");
+            byte[] buf = cipher.doFinal(plainTextBytes);
+            byte[] base64Bytes = Base64.getEncoder().encode(buf);
+            encriptada = new String(base64Bytes);            
+        } catch (Exception ex) {
+            System.out.println("surgió un error al cifrar\nla contrasenia\n"+ex.getMessage());
+            encriptada = null;
+        }
+        return encriptada;
+    }              
     
     public String desencriptarContrasenia(String encriptada){
-        String desencriptada=":3";
+        String desencriptada=null;        
         
-        return desencriptada;
+        try {
+            byte[] message = Base64.getDecoder().decode(encriptada.getBytes("utf-8"));            
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] digestOfPassword = md.digest(contraseniaMaestra.getBytes("utf-8"));
+            byte[] keyBytes = Arrays.copyOf(digestOfPassword, 24);
+            SecretKey key = new SecretKeySpec(keyBytes, "DESede");
+
+            Cipher decipher = Cipher.getInstance("DESede");
+            decipher.init(Cipher.DECRYPT_MODE, key);
+
+            byte[] plainText = decipher.doFinal(message);
+
+            desencriptada = new String(plainText, "UTF-8");
+
+        } catch (Exception ex) {
+            System.out.println("surgió un error al descifrar\nla contrasenia\n"+ex.getMessage());
+            desencriptada = null;
+        }
+        return desencriptada;        
     }        
     
     public int extraerParteNumerica(int inicioExtraccion, String cadena){
@@ -59,9 +86,9 @@ public class Herramienta {//aquí iran las herramientas que no encajen con las c
     
     public String darPaginaPerfil(String tipoUsuario){
         if(tipoUsuario.equals("Paciente")){
-            return "";//El perfil del paciente :v xD
+            return "HomePaciente.jsp";//El perfil del paciente :v xD
         }if(tipoUsuario.equals("Medico")){
-            return "";
+            return "HomeMedico.jsp";
         }if(tipoUsuario.equals("Administrador")){
             return "HomeAdministrador.jsp";
         }
@@ -82,9 +109,41 @@ public class Herramienta {//aquí iran las herramientas que no encajen con las c
                  return "CustomizacionConsulta.jsp";            
             case"Paciente":
                 return "CustomizacionPaciente.jsp";                   
+            case"Reportes":
+                return "ReportesAdministrador.jsp";            
         }        
       }        
-            return "perfilAdministrador.jsp";
+            return "PerfilAdministrador.jsp";
+    }
+    
+    public String darPaginaReporteAlAdmin(String tipo){
+        if(tipo!=null){
+            switch(tipo){                
+                case "ProductividadMedica":
+                    return "ProductividadMedica.jsp";                
+                case "DemandaExamenes":
+                    return "DemandaExamenes.jsp";                
+                case "SolicitudExamenes":
+                    return "SolicitudExamenes.jsp";                
+                case "IngresosMedico":
+                    return "IngresosPorMedico.jsp";
+            }                                    
+        }        
+        return "IngresosPorPaciente.jsp";
+    }
+    
+    public String darPaginaAlPaciente(String tipo){
+      if(tipo!=null){
+        switch(tipo){
+            case "AgendarCitaMedica":
+                return "AgendarCitaMedica.jsp";                        
+            case"AgendarExamen":
+                 return "AgendarExamen.jsp";                        
+            case"VerHistorial":
+                 return "HistorialClinico.jsp";                                    
+        }        
+      }        
+       return "PerfilPaciente.jsp";
     }
     
     public boolean esRedundante(ListaEnlazada<String> listaAComparar, String comparado){
@@ -147,6 +206,16 @@ public class Herramienta {//aquí iran las herramientas que no encajen con las c
     
     public void estblecerUltimosIDnumericos(int[] ultimosID){
         ultimosIDCreados=ultimosID;
+    }
+    
+    public int[] darElMayor(int numero1, int numero2){
+        int resultado[] = {1, numero1};        
+        
+        if(numero2>numero1){
+            resultado[0]= 2;
+            resultado[1]= numero2;                        
+        }                       
+        return resultado;//Entonces puede que devuelva 1 si son ==
     }
     
 }

@@ -5,11 +5,13 @@
  */
 package Kit;
 
+import java.io.Serializable;
+
 /**
  *
  * @author phily
  */
-public class ListaEnlazada <E>{
+public class ListaEnlazada <E> implements Serializable{
     private Nodo<E> primerNodo;//posee el primero objeto puesto que así se sabe de donde partir
     private Nodo<E> ultimoNodo;//obtiene el último elemento, el cual de forma directa ayuda a saber si tiene o no elementos
     private String nombreLista;//podría tener nombre,, solo debes pensar como se lo asignarás

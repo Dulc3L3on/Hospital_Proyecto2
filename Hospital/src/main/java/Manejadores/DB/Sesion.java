@@ -5,6 +5,7 @@
  */
 package Manejadores.DB;
 
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,7 +15,7 @@ import java.sql.SQLException;
  *
  * @author phily
  */
-public class Sesion {
+public class Sesion implements Serializable{
     private static Connection conexion;
     
 //    public Sesion(Connection conexionDB){

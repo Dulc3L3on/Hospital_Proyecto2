@@ -8,6 +8,7 @@ package Manejadores.Archivos;
 import Kit.ControlIndices;
 import Kit.Herramienta;
 import Manejadores.DB.CreadorDeCarga;
+import java.io.Serializable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -17,7 +18,7 @@ import org.w3c.dom.NodeList;
  *
  * @author phily
  */
-public class CargaDeDatos {
+public class CargaDeDatos implements Serializable{
     CreadorDeCarga creadorRegistros;
     Herramienta herramienta = new Herramienta();   
     ControlIndices controladorIndices = new ControlIndices();

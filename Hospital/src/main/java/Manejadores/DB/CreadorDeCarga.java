@@ -9,6 +9,7 @@ import Kit.ControlIndices;
 import Kit.Herramienta;
 import Kit.ListaEnlazada;
 import Kit.Nodo;
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -18,7 +19,7 @@ import javax.swing.JOptionPane;
  *
  * @author phily
  */
-public class CreadorDeCarga {//si hay algo que pueda generalizar, será colocado aquí, de lo contrario, irá en su clase específica de la entidad ó si miras que no serán tantos los metodos, entonces aquí estarán los métodos por entidad, a sabiendas de que solo haBrá 1 [no creo que hayan más, pero si sí, sería max 2 [o talvez 3 xD]
+public class CreadorDeCarga implements Serializable{//si hay algo que pueda generalizar, será colocado aquí, de lo contrario, irá en su clase específica de la entidad ó si miras que no serán tantos los metodos, entonces aquí estarán los métodos por entidad, a sabiendas de que solo haBrá 1 [no creo que hayan más, pero si sí, sería max 2 [o talvez 3 xD]
     private static Connection conexion;
     private Herramienta herramienta = new Herramienta();
     private Creacion creacion;
@@ -55,6 +56,7 @@ public class CreadorDeCarga {//si hay algo que pueda generalizar, será colocado
                 instruccion.executeUpdate();
                 controladorIndices.establecerUltimoIndice(5, parteNumerica);//y de esta manera ya en el proceso normal, no habrán problemas con el código xD... de todos modos SÍ se alamcenará con su parte en string... así como lo diern... xD
             }else{
+                
                 //mandarás a llamar al objeto que se encarga de concatenar el tipo de categoría y código del que surgió el error
             }//a menos que halles la manera en que puedas saber cuando cualquiera de los 2 a fallado, las llamadas a la concatenación de los errores deberá estar en ambos lugares...
             

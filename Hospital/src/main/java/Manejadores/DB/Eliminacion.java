@@ -5,10 +5,12 @@
  */
 package Manejadores.DB;
 
+import java.io.Serializable;
+
 /**
  *
  * @author phily
  */
-public class Eliminacion {
+public class Eliminacion implements Serializable{
     
 }

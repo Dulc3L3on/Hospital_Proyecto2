@@ -21,6 +21,7 @@ import Manejadores.DB.BusquedaGeneral;
 import Reservaciones.Cita;
 import Reservaciones.CitaExamen;
 import Reservaciones.CitaMedica;
+import java.io.Serializable;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -29,12 +30,22 @@ import java.sql.SQLException;
  *
  * @author phily
  */
-public class IntegradorEntidades {
+public class IntegradorEntidades implements Serializable{
     BusquedaGeneral buscador;
-    BusquedaEspecifica buscadorMinucioso = new BusquedaEspecifica();
-        
+    BusquedaEspecifica buscadorMinucioso;
+//        
+//    public IntegradorEntidades(){
+//        buscador = new BusquedaGeneral();
+//        buscadorMinucioso = new BusquedaEspecifica();
+//    }
+    
     public void establecerBuscadorGeneral(BusquedaGeneral generalizador){
         buscador = generalizador;
+        
+    }//podías hacer 1 de 2 cosas, crear estos métodos para que se establezcan luego estas partes o crear un constructor para que en ese lugar los cree...
+    
+    public void establecerBUsquedaEspecifica(BusquedaEspecifica especificador){
+        buscadorMinucioso = especificador;
     }
     
       public Usuario formarEntidad(ResultSet resultado, String tipo){ 
@@ -232,5 +243,14 @@ public class IntegradorEntidades {
        return cita;
     }
     
+    public CitaMedica[] formarCitasAlternativa(Medico medicoSolicitado, int codigoPaciente, String especialidad, Date fechaRealizacion){//para este método y para el de las reservaciones de examnes [si es que se llega a requerir algo así... no deberán tener un método de convergencia como el de las estructuras, usuarios y documentos...
+       CitaMedica[] citas = new CitaMedica[medicoSolicitado.darHoraFin()-medicoSolicitado.darHoraInicio()];    
+              
+        for (int horaActual = medicoSolicitado.darHoraInicio(); horaActual < medicoSolicitado.darHoraFin(); horaActual++) {
+             citas[horaActual] = new CitaMedica(codigoPaciente,medicoSolicitado.darCodigo(), especialidad, fechaRealizacion, horaActual);                                    
+        }//de esta manera cuando no tenga registros la cita para ese día en particular, se devolverá el arreglo con todas las hora disponibles...            
+       return citas;
+    }
+   
     
 }

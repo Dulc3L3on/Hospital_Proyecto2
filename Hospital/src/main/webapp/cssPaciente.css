@@ -1,0 +1,65 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 5/10/2020, 22:10:51
+    Author     : phily
+*/
+#acciones{    
+     height: 35px;
+     padding-left: 50px;
+     padding-right: 50px;
+}
+
+#perfil{
+    float: right;      
+}
+
+#listaElementos{    
+    float: left;            
+    background-color: lightcyan;    
+    width: 470px;
+    height: 530px;
+    overflow: scroll;
+    font-size: 24px;
+    font-family: cursive;
+}
+
+#areaInformacion{
+    position: relative;
+    left: -470px;  
+    top: 550px;    
+    background-color: midnightblue;    
+    width: 470px;
+    height: 300px;
+    overflow: scroll;/*aunque todo debería caber en ese cuadrito... xD*/
+    font-family: Georgia, "Times New Roman", serif;
+}
+#framePaciente{
+    height: 895px;
+    width: 1900px;
+    border: none;    
+}
+
+#comandos{        
+    margin-left: 150px;           
+}
+
+#listado{
+    width: 105px;    
+}
+
+#horasDisponibles{
+        
+}
+
+#areaBusqueda{
+    position: relative;
+    left: 170px;    
+}
+
+#areaHistorial{
+    background-color: lightblue;    
+}

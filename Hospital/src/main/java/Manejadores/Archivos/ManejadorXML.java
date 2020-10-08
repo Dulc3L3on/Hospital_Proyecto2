@@ -8,6 +8,7 @@ package Manejadores.Archivos;
 import Verificadores.VerificadorDB;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.sql.Connection;
 import javax.swing.JOptionPane;
 import javax.xml.parsers.DocumentBuilder;
@@ -22,7 +23,7 @@ import org.xml.sax.SAXException;
  *
  * @author phily
  */
-public class ManejadorXML {
+public class ManejadorXML implements Serializable{
     CargaDeDatos clasificador;    
     
 //    public ManejadorXML(Connection conexionDB){//recuerda que este solo deberá ser ejecutado cuando la DB esté vacía...
@@ -54,12 +55,7 @@ public class ManejadorXML {
     }          
     
 }
-/*
-import org.jdom2.Document;         // |
-import org.jdom2.Element;          // |\ Librerías
-import org.jdom2.JDOMException;    // |/ JDOM
-import org.jdom2.input.SAXBuilder;
-*/
+
 
 /*
  <%if(request.getParameter("carga").equalsIgnoreCase("ACEPTADO")){//<!--a mi parecer, como aún no se ha creado el btn entonces al tener "ACEPTAR" como la comparación no habrá problema, puesto que aún no existe el componente...-->        

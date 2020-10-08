@@ -39,12 +39,12 @@
                 
                 <%if(estructura!=null){%>
                     <%for(int numeroEstructura=0; numeroEstructura<estructura.length; numeroEstructura++){%>                
-                        <p><%estructura[numeroEstructura].darNombre();%><a href="customizacionExamen.jsp?numero=${numeroEstructura}">ver</a></p>
+                        <p><%estructura[numeroEstructura].darNombre();%><a href="CustomizacionExamen.jsp?numero=${numeroEstructura}">ver</a></p>
                         <br/>                
                     <%}%>
                 <%}%>
             </div>    
-            <form method="POST" action="customizacionExamen.jsp" id="comandos">                
+            <form method="POST" action="CustomizacionExamen.jsp" id="comandos">                
                 <%if(request.getParameter("opcion")!=null && numero!=-1) {
                     if(request.getParameter("opcion").equals("MODIFICAR")){
                         //se llaman al método para hacer la actualización en la tabla...
@@ -64,7 +64,7 @@
         
         <div id="contenedorInformacion">            
             <h3>CÓDIGO: <%=codigo%></h3>
-            <form method="POST" action="customizacionExamen.jsp"><!--pienso que no habrá problemas con el hecho de que estén en diferente for los btn y los campos, puesto que están las variables, las cuales son de la página entera, no de un form o div en particular,y al ser empleadoas por ambos form, existe una conexión entre ellos...-->
+            <form method="POST" action="CustomizacionExamen.jsp"><!--pienso que no habrá problemas con el hecho de que estén en diferente for los btn y los campos, puesto que están las variables, las cuales son de la página entera, no de un form o div en particular,y al ser empleadoas por ambos form, existe una conexión entre ellos...-->
                 <img src="img/reporteMedico.png" id="fotografia" alt="iconoExamen">
                 <center>
                     <table cellspacing="25">
@@ -84,7 +84,7 @@
                         </tr> 
                         <tr>
                             <th colspan="2">
-                                <textarea required placeholder="descripcion" rows="5" colum="5"><%=descripcion%></textarea>
+                                <textarea required placeholder="descripcion" rows="15" colum="35"><%=descripcion%></textarea>
                             </th>                            
                             <th>
                                <select id="listado" name="requerimiento" required>
